@@ -4,19 +4,32 @@ import java.util.ArrayList;
  *
  * Created by rgw3d on 11/5/2015.
  */
-public class Term implements EquationNode {
-    private final Rational COEFFICIENT;
+public class Term extends NumberStructure {
+    private final NumberStructure COEFFICIENT;
     private final ArrayList<Variable> VARIABLES;
-    private final Imaginary IMAGINARY;
+    private final NumberStructure IMAGINARY;
+
+    public Term(NumberStructure coef, ArrayList<Variable> var, NumberStructure img){
+        if(coef == null)
+            COEFFICIENT = Number.One;
+        else
+            COEFFICIENT = coef;
+        if(var == null)
+            VARIABLES = Variable.DEFAULT_VARIABLE_LIST;
+        else
+            VARIABLES = var;
+        if(img == null)
+            IMAGINARY =
+        IMAGINARY = img;
+    }
 
     /**
      * gets the number value for the Simplifier.EquationNode
      *
      * @return double number value
      */
-    @Override
-    public double getCoefficient() {
-        return 0;
+    public NumberStructure getCoefficient() {
+        return COEFFICIENT;
     }
 
     /**
@@ -24,9 +37,12 @@ public class Term implements EquationNode {
      *
      * @return double Var value
      */
-    @Override
     public ArrayList<Variable> getVariable() {
-        return null;
+        return VARIABLES;
+    }
+
+    public NumberStructure getImaginary() {
+        return IMAGINARY;
     }
 
     /**
@@ -39,25 +55,25 @@ public class Term implements EquationNode {
         return null;
     }
 
-    /**
-     * Treats everything as a fraction. Gets the "top".
-     * Usually the top is just the evaluate() method.
-     *
-     * @return ArrayList of simplified "top" terms
-     */
+
     @Override
-    public ArrayList<EquationNode> getTop() {
-        return null;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Term)) return false;
+
+        Term term = (Term) o;
+
+        if (!COEFFICIENT.equals(term.COEFFICIENT)) return false;
+        if (!VARIABLES.equals(term.VARIABLES)) return false;
+        return IMAGINARY.equals(term.IMAGINARY);
+
     }
 
-    /**
-     * Treats everything as a fraction. Gets the "bottom".
-     * Usually the bottom is just a nominal with getCoefficient()=1 and getVariable()=0
-     *
-     * @return ArrayList of simplified "bottom" terms
-     */
     @Override
-    public ArrayList<EquationNode> getBottom() {
-        return null;
+    public int hashCode() {
+        int result = COEFFICIENT.hashCode();
+        result = 31 * result + VARIABLES.hashCode();
+        result = 31 * result + IMAGINARY.hashCode();
+        return result;
     }
 }

@@ -1,13 +1,16 @@
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Arrays;
 
 /**
  *
  * Created by rgw3d on 11/5/2015.
  */
 public class Variable extends NumberStructure{
+
+    private final NumberStructure coefficient;
     private final char variable;
     private final NumberStructure exponent;
+    public static final ArrayList<NumberStructure> DEFAULT_VARIABLE_LIST = new ArrayList<NumberStructure>(Arrays.asList(new Variable(Number.One, 'x',Number.Zero)));
 
     public char getVariable() {
         return variable;
@@ -17,14 +20,27 @@ public class Variable extends NumberStructure{
         return exponent;
     }
 
+    public NumberStructure getCoefficient() {
+        return coefficient;
+    }
+
     @Override
     public String toString() {
         return variable + "^"+ exponent.toString();
     }
 
-    public Variable(char variable, NumberStructure exponent){
+    public Variable(NumberStructure coefficient, char variable, NumberStructure exponent){
+        if(coefficient == null)
+            this.coefficient = Number.One;
+        else
+            this.coefficient = coefficient;
+
         this.variable = variable;
-        this.exponent = exponent;
+
+        if(exponent == null)
+            this.exponent = Number.One;
+        else
+            this.exponent = exponent;
     }
 
     /**
@@ -39,5 +55,24 @@ public class Variable extends NumberStructure{
         return result;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Variable)) return false;
 
+        Variable variable1 = (Variable) o;
+
+        if (variable != variable1.variable) return false;
+        if (!coefficient.equals(variable1.coefficient)) return false;
+        return exponent.equals(variable1.exponent);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = coefficient.hashCode();
+        result = 31 * result + (int) variable;
+        result = 31 * result + exponent.hashCode();
+        return result;
+    }
 }

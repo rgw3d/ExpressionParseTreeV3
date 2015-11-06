@@ -128,7 +128,7 @@ public class MathOperations {
         ArrayList<EquationNode> others = new ArrayList<EquationNode>();//anything that is not a fraction
 
         for(EquationNode node: terms){
-            if(node instanceof Rational)
+            if(node instanceof Fraction)
                 fractions.add(node);
             else
                 others.add(node);
@@ -170,7 +170,7 @@ public class MathOperations {
             variableDependentAddition(addTop);
 
             if(x.size()!=1 || x.get(0).getCoefficient()!=0)
-                terms.add(simplifyFractions(new Rational(addTop, x)));
+                terms.add(simplifyFractions(new Fraction(addTop, x)));
 
         }
     }
@@ -203,20 +203,20 @@ public class MathOperations {
      * @return Simplifier.NumberStructure, either a fraction or nominal
      */
     private static NumberStructure nominalMultiplication(ArrayList<EquationNode> terms) {
-        Rational rational = new Rational(Number.One);
+        Fraction fraction = new Fraction(Number.One);
         for(EquationNode node : terms){
-            ArrayList<EquationNode> tmpTop = multiplyLists(rational.getTop(), node.getTop());
-            rational.getTop().clear();
-            rational.getTop().addAll(tmpTop);
+            ArrayList<EquationNode> tmpTop = multiplyLists(fraction.getTop(), node.getTop());
+            fraction.getTop().clear();
+            fraction.getTop().addAll(tmpTop);
 
-            ArrayList<EquationNode> tmpBot = multiplyLists(rational.getBottom(), node.getBottom());
-            rational.getBottom().clear();
-            rational.getBottom().addAll(tmpBot);
+            ArrayList<EquationNode> tmpBot = multiplyLists(fraction.getBottom(), node.getBottom());
+            fraction.getBottom().clear();
+            fraction.getBottom().addAll(tmpBot);
         }
-        if(rational.getTop().size()==1 && rational.getBottom().size()==1 && rational.getBottom().get(0).equals(Number.One))
-            return new Number(rational.getTop().get(0).getCoefficient(), rational.getTop().get(0).getVariable());
+        if(fraction.getTop().size()==1 && fraction.getBottom().size()==1 && fraction.getBottom().get(0).equals(Number.One))
+            return new Number(fraction.getTop().get(0).getCoefficient(), fraction.getTop().get(0).getVariable());
         else
-            return simplifyFractions(rational);
+            return simplifyFractions(fraction);
 
     }
 
@@ -274,7 +274,7 @@ public class MathOperations {
     public static void divisionControl(ArrayList<EquationNode> terms) {
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
-        NumberStructure fraction = new Rational(terms.get(0).evaluate(), terms.get(1).evaluate());
+        NumberStructure fraction = new Fraction(terms.get(0).evaluate(), terms.get(1).evaluate());
         fraction = simplifyFractions(fraction);
         terms.clear();
         terms.add(fraction);
@@ -292,17 +292,17 @@ public class MathOperations {
             return fraction;
 
         for (EquationNode top : fraction.getTop()) {//simplify underlying fractions
-            if (top instanceof Rational) {//could be a fraction in a fraction
+            if (top instanceof Fraction) {//could be a fraction in a fraction
                 int tmpIndx = fraction.getTop().indexOf(top);//get indx of fraction
                 fraction.getTop().remove(top);//remove the object from the list
-                fraction.getTop().add(tmpIndx, simplifyFractions((Rational) top));//add the "simplified" object back in
+                fraction.getTop().add(tmpIndx, simplifyFractions((Fraction) top));//add the "simplified" object back in
             }
         }
         for (EquationNode bot : fraction.getBottom()) {//simplify underlying fractions
-            if (bot instanceof Rational) {//could be a fraction in a fraction
+            if (bot instanceof Fraction) {//could be a fraction in a fraction
                 int tmpIndx = fraction.getBottom().indexOf(bot);//get indx of fraction
                 fraction.getBottom().remove(bot);//remove the object from the list
-                fraction.getBottom().add(tmpIndx, simplifyFractions((Rational) bot));//add the "simplified" object back in
+                fraction.getBottom().add(tmpIndx, simplifyFractions((Fraction) bot));//add the "simplified" object back in
             }
         }
 
@@ -541,7 +541,7 @@ public class MathOperations {
             terms.add(Number.One);
         }
         else if(expnt <0){//negative exponent
-            Rational flipped = new Rational(terms.get(0).evaluate());
+            Fraction flipped = new Fraction(terms.get(0).evaluate());
             expnt = Math.abs(expnt);
 
             if(expnt-1==0){//not multiplied.  exponent of 1
@@ -621,7 +621,7 @@ public class MathOperations {
             ArrayList<EquationNode> list = terms.get(1).evaluate();//get the list for the exponent
             if (list.size() == 1 && list.get(0) instanceof Number && list.get(0).getVariable() == 0) {
                 return true;//if it simplifies to a nominal without a variable
-            } else if (list.size() == 1 && list.get(0) instanceof Rational) {
+            } else if (list.size() == 1 && list.get(0) instanceof Fraction) {
                 NumberStructure simplifiedFraction = simplifyFractions((NumberStructure) list.get(0));
                 return (simplifiedFraction.getTop().size() == 1 && simplifiedFraction.getTop().get(0) instanceof Number && simplifiedFraction.getTop().get(0).getVariable() == 0 &&
                         simplifiedFraction.getBottom().size() == 1 && simplifiedFraction.getBottom().get(0).equals(Number.One));
@@ -640,7 +640,7 @@ public class MathOperations {
     public static int countFractions(ArrayList<EquationNode> list){
         int count = 0;
         for(EquationNode node: list){
-            if(node instanceof Rational)
+            if(node instanceof Fraction)
                 count ++;
         }
         return count;
