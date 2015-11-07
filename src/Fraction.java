@@ -1,13 +1,15 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Simplifier.NumberStructurefier.NumberStructure used to represent rational fractions.
  * Created by rgw3d on 10/9/2014.
  */
 public class Fraction extends NumberStructure {
-
     private final ArrayList<NumberStructure> Top;
     private final ArrayList<NumberStructure> Bottom;
+
+    public static final ArrayList<NumberStructure> DEFAULT_LIST = new ArrayList<NumberStructure>(Arrays.asList(Number.ONE));
 
     /**
      * Primary constructor
@@ -16,17 +18,17 @@ public class Fraction extends NumberStructure {
      */
     public Fraction(ArrayList<NumberStructure> top, ArrayList<NumberStructure> bottom) {
         if(top == null)
-            top = NumberStructure.DEFAULT_LIST;
+            top = DEFAULT_LIST;
         else if (top.size() == 0 ){
-            top = NumberStructure.DEFAULT_LIST;
+            top = DEFAULT_LIST;
         }
         Top = top;
 
         if(bottom == null){
-            bottom = NumberStructure.DEFAULT_LIST;
+            bottom = DEFAULT_LIST;
         }
         else if(bottom.size() == 1){//if it is zero, then the zero has been removed and it is a divide by zero error
-            if(bottom.get(0).equals(Number.Zero))
+            if(bottom.get(0).equals(Number.ZERO))
                 throw new IllegalArgumentException("Error: Divisor is 0");
         }
         Bottom = bottom;
@@ -47,7 +49,7 @@ public class Fraction extends NumberStructure {
      */
     @Override
     public ArrayList<EquationNode> evaluate() {
-        return null;
+        return new ArrayList<EquationNode>(Arrays.asList(this));
     }
 
     @Override

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Simplifier.Number Simplifier.NumberStructure
@@ -11,11 +12,10 @@ public class Number extends NumberStructure {
     private final double PICount;
     private final double eCount;
 
-    public static final Number Zero = new Number(0);
-    public static final Number One = new Number(1);
+    public static final Number ZERO = new Number(0);
+    public static final Number ONE = new Number(1);
     public static final Number PI = new Number("pi");
     public static final Number e = new Number("e");
-
 
     /**
      * Default constructor.
@@ -97,6 +97,6 @@ public class Number extends NumberStructure {
      */
     @Override
     public ArrayList<EquationNode> evaluate() {
-        return null;
+        return new ArrayList<EquationNode>(Arrays.asList(this));
     }
 }

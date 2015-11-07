@@ -7,28 +7,28 @@ import java.util.Arrays;
  */
 public class Variable extends NumberStructure{
 
-    private final NumberStructure coefficient;
-    private final char variable;
-    private final NumberStructure exponent;
-    public static final ArrayList<Variable> DEFAULT_VARIABLE_LIST = new ArrayList<Variable>(Arrays.asList(new Variable(NumberStructure.Number.One, 'x', NumberStructure.Number.Zero)));
+    private final NumberStructure Coefficient;
+    private final char Variable;
+    private final NumberStructure Exponent;
+    public static final ArrayList<Variable> DEFAULT_VARIABLE_LIST = new ArrayList<Variable>(Arrays.asList(new Variable(Number.ONE, 'x', Number.ZERO)));
 
     @Override
     public String toString() {
-        return variable + "^"+ exponent.toString();
+        return Variable + "^"+ Exponent.toString();
     }
 
     public Variable(NumberStructure coefficient, char variable, NumberStructure exponent){
         if(coefficient == null)
-            this.coefficient = NumberStructure.Number.One;
+            this.Coefficient = Number.ONE;
         else
-            this.coefficient = coefficient;
+            this.Coefficient = coefficient;
 
-        this.variable = variable;
+        this.Variable = variable;
 
         if(exponent == null)
-            this.exponent = NumberStructure.Number.One;
+            this.Exponent = Number.ONE;
         else
-            this.exponent = exponent;
+            this.Exponent = exponent;
     }
 
     /**
@@ -38,9 +38,7 @@ public class Variable extends NumberStructure{
      */
     @Override
     public ArrayList<EquationNode> evaluate() {
-        ArrayList<EquationNode> result = new ArrayList<EquationNode>();
-        result.add(this);
-        return result;
+        return new ArrayList<EquationNode>(Arrays.asList(this));
     }
 
     @Override
@@ -50,17 +48,17 @@ public class Variable extends NumberStructure{
 
         Variable variable1 = (Variable) o;
 
-        if (variable != variable1.variable) return false;
-        if (!coefficient.equals(variable1.coefficient)) return false;
-        return exponent.equals(variable1.exponent);
+        if (Variable != variable1.Variable) return false;
+        if (!Coefficient.equals(variable1.Coefficient)) return false;
+        return Exponent.equals(variable1.Exponent);
 
     }
 
     @Override
     public int hashCode() {
-        int result = coefficient.hashCode();
-        result = 31 * result + (int) variable;
-        result = 31 * result + exponent.hashCode();
+        int result = Coefficient.hashCode();
+        result = 31 * result + (int) Variable;
+        result = 31 * result + Exponent.hashCode();
         return result;
     }
 }

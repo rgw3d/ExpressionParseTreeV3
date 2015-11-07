@@ -12,7 +12,7 @@ public class Term extends NumberStructure {
 
     public Term(NumberStructure coef, ArrayList<Variable> var, NumberStructure img){
         if(coef == null)
-            coef = Number.One;
+            coef = Number.ONE;
         if(var == null)
             var = Variable.DEFAULT_VARIABLE_LIST;
         if(img == null)

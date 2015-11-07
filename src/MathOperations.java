@@ -684,7 +684,7 @@ public class MathOperations {
      * Assumes list only has Nominals
      * @param list list of Nominals to be tested
      * @param degree the specified variable degree to find
-     * @return first instance of Nth degree Number, or Number.One if nothing of that degree is found
+     * @return first instance of Nth degree Number, or Number.ONE if nothing of that degree is found
      */
     public static NumberStructure.Number findNthDegreeNominal(double degree,ArrayList<EquationNode> list ){
         for(EquationNode node: list){

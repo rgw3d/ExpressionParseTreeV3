@@ -10,9 +10,12 @@ public class Expression {
     private Operator op1;
     private Operator op2;
     private final String expressionInput;
+    //private final String reformattedInput;
 
     public Expression(String expression){
         expressionInput = expression;
+
+
 
 
     }

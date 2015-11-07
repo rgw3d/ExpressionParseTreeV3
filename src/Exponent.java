@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -29,6 +30,25 @@ public class Exponent extends NumberStructure {
      */
     @Override
     public ArrayList<EquationNode> evaluate() {
-        return null;
+        return new ArrayList<EquationNode>(Arrays.asList(this));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Exponent)) return false;
+
+        Exponent exponent = (Exponent) o;
+
+        if (!Base.equals(exponent.Base)) return false;
+        return Exponent.equals(exponent.Exponent);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Base.hashCode();
+        result = 31 * result + Exponent.hashCode();
+        return result;
     }
 }
