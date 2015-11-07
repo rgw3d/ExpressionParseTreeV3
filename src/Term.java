@@ -1,26 +1,26 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
  * Created by rgw3d on 11/5/2015.
  */
 public class Term extends NumberStructure {
-    private final NumberStructure COEFFICIENT;
-    private final ArrayList<Variable> VARIABLES;
-    private final NumberStructure IMAGINARY;
+    private final NumberStructure Coefficient;
+    private final ArrayList<Variable> Variables;
+    private final NumberStructure Imagine;
 
     public Term(NumberStructure coef, ArrayList<Variable> var, NumberStructure img){
         if(coef == null)
-            COEFFICIENT = Number.One;
-        else
-            COEFFICIENT = coef;
+            coef = Number.One;
         if(var == null)
-            VARIABLES = Variable.DEFAULT_VARIABLE_LIST;
-        else
-            VARIABLES = var;
+            var = Variable.DEFAULT_VARIABLE_LIST;
         if(img == null)
-            IMAGINARY =
-        IMAGINARY = img;
+            img = Imaginary.ZERO;
+
+        Coefficient = coef;
+        Variables = var;
+        Imagine = img;
     }
 
     /**
@@ -29,7 +29,7 @@ public class Term extends NumberStructure {
      * @return double number value
      */
     public NumberStructure getCoefficient() {
-        return COEFFICIENT;
+        return Coefficient;
     }
 
     /**
@@ -38,11 +38,11 @@ public class Term extends NumberStructure {
      * @return double Var value
      */
     public ArrayList<Variable> getVariable() {
-        return VARIABLES;
+        return Variables;
     }
 
     public NumberStructure getImaginary() {
-        return IMAGINARY;
+        return Imagine;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Term extends NumberStructure {
      */
     @Override
     public ArrayList<EquationNode> evaluate() {
-        return null;
+        return new ArrayList<EquationNode>(Arrays.asList(this));
     }
 
 
@@ -63,17 +63,17 @@ public class Term extends NumberStructure {
 
         Term term = (Term) o;
 
-        if (!COEFFICIENT.equals(term.COEFFICIENT)) return false;
-        if (!VARIABLES.equals(term.VARIABLES)) return false;
-        return IMAGINARY.equals(term.IMAGINARY);
+        if (!Coefficient.equals(term.Coefficient)) return false;
+        if (!Variables.equals(term.Variables)) return false;
+        return Imagine.equals(term.Imagine);
 
     }
 
     @Override
     public int hashCode() {
-        int result = COEFFICIENT.hashCode();
-        result = 31 * result + VARIABLES.hashCode();
-        result = 31 * result + IMAGINARY.hashCode();
+        int result = Coefficient.hashCode();
+        result = 31 * result + Variables.hashCode();
+        result = 31 * result + Imagine.hashCode();
         return result;
     }
 }

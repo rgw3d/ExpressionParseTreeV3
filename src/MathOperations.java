@@ -41,7 +41,7 @@ public class MathOperations {
 
 
         for(EquationNode node: terms){
-            if(node instanceof Number)
+            if(node instanceof NumberStructure.Number)
                 nominalsOnly.add(node);
             else
                 others.add(node);
@@ -68,7 +68,7 @@ public class MathOperations {
     private static boolean sameVariablePower(ArrayList<EquationNode> terms){
         double variablePower = terms.get(0).getVariable();
         for(EquationNode node: terms){
-            if(!(node instanceof Number) || node.getVariable()!=variablePower)
+            if(!(node instanceof NumberStructure.Number) || node.getVariable()!=variablePower)
                 return false;
         }
         return true;
@@ -80,11 +80,11 @@ public class MathOperations {
      * @param terms all Simplifier.EquationNode objects to add
      * @return Simplifier.Number that contains summed value along with correct getVariable() value.
      */
-    private static Number variableIndependentAddition(ArrayList<EquationNode> terms){
+    private static NumberStructure.Number variableIndependentAddition(ArrayList<EquationNode> terms){
         double total = 0;
         for(EquationNode node: terms)
             total+=node.getCoefficient();
-        return new Number(total,terms.get(0).getVariable());
+        return new NumberStructure.Number(total,terms.get(0).getVariable());
     }
 
     /**
@@ -113,7 +113,7 @@ public class MathOperations {
         Collections.sort(varsAdded);
         Collections.reverse(varsAdded);//descending order
         for (Double var : varsAdded) {
-            Number simp = variableIndependentAddition(sortedNominals.get(var));
+            NumberStructure.Number simp = variableIndependentAddition(sortedNominals.get(var));
             if(simp.getCoefficient()!=0)//num doesn't equal zero.  stops this situation--> 0.0x^2.0 from happening and screwing things up
                 terms.add(simp);
         }
@@ -128,7 +128,7 @@ public class MathOperations {
         ArrayList<EquationNode> others = new ArrayList<EquationNode>();//anything that is not a fraction
 
         for(EquationNode node: terms){
-            if(node instanceof Fraction)
+            if(node instanceof NumberStructure.Fraction)
                 fractions.add(node);
             else
                 others.add(node);
@@ -170,7 +170,7 @@ public class MathOperations {
             variableDependentAddition(addTop);
 
             if(x.size()!=1 || x.get(0).getCoefficient()!=0)
-                terms.add(simplifyFractions(new Fraction(addTop, x)));
+                terms.add(simplifyFractions(new NumberStructure.Fraction(addTop, x)));
 
         }
     }
@@ -203,7 +203,7 @@ public class MathOperations {
      * @return Simplifier.NumberStructure, either a fraction or nominal
      */
     private static NumberStructure nominalMultiplication(ArrayList<EquationNode> terms) {
-        Fraction fraction = new Fraction(Number.One);
+        NumberStructure.Fraction fraction = new NumberStructure.Fraction(NumberStructure.Number.One);
         for(EquationNode node : terms){
             ArrayList<EquationNode> tmpTop = multiplyLists(fraction.getTop(), node.getTop());
             fraction.getTop().clear();
@@ -213,8 +213,8 @@ public class MathOperations {
             fraction.getBottom().clear();
             fraction.getBottom().addAll(tmpBot);
         }
-        if(fraction.getTop().size()==1 && fraction.getBottom().size()==1 && fraction.getBottom().get(0).equals(Number.One))
-            return new Number(fraction.getTop().get(0).getCoefficient(), fraction.getTop().get(0).getVariable());
+        if(fraction.getTop().size()==1 && fraction.getBottom().size()==1 && fraction.getBottom().get(0).equals(NumberStructure.Number.One))
+            return new NumberStructure.Number(fraction.getTop().get(0).getCoefficient(), fraction.getTop().get(0).getVariable());
         else
             return simplifyFractions(fraction);
 
@@ -232,8 +232,8 @@ public class MathOperations {
 
         for(EquationNode leftTerm : left){
             for(EquationNode rightTerm : right){
-                if(leftTerm instanceof Number && rightTerm instanceof Number)
-                    result.add(new Number(leftTerm.getCoefficient()*rightTerm.getCoefficient(),leftTerm.getVariable() + rightTerm.getVariable()));
+                if(leftTerm instanceof NumberStructure.Number && rightTerm instanceof NumberStructure.Number)
+                    result.add(new NumberStructure.Number(leftTerm.getCoefficient()*rightTerm.getCoefficient(),leftTerm.getVariable() + rightTerm.getVariable()));
                 else if( leftTerm instanceof NumberStructure && rightTerm instanceof NumberStructure) {
                     ArrayList<EquationNode> leftAndRightNodes = new ArrayList<EquationNode>();
                     leftAndRightNodes.add(leftTerm);
@@ -274,7 +274,7 @@ public class MathOperations {
     public static void divisionControl(ArrayList<EquationNode> terms) {
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
-        NumberStructure fraction = new Fraction(terms.get(0).evaluate(), terms.get(1).evaluate());
+        NumberStructure fraction = new NumberStructure.Fraction(terms.get(0).evaluate(), terms.get(1).evaluate());
         fraction = simplifyFractions(fraction);
         terms.clear();
         terms.add(fraction);
@@ -288,21 +288,21 @@ public class MathOperations {
      * @return NumberStructure. the simplified fraction, or can be simplified into a nominal.
      */
     private static NumberStructure simplifyFractions(NumberStructure fraction) {
-        if(fraction instanceof Number)//if a nominal is sent. cannot be simplified
+        if(fraction instanceof NumberStructure.Number)//if a nominal is sent. cannot be simplified
             return fraction;
 
         for (EquationNode top : fraction.getTop()) {//simplify underlying fractions
-            if (top instanceof Fraction) {//could be a fraction in a fraction
+            if (top instanceof NumberStructure.Fraction) {//could be a fraction in a fraction
                 int tmpIndx = fraction.getTop().indexOf(top);//get indx of fraction
                 fraction.getTop().remove(top);//remove the object from the list
-                fraction.getTop().add(tmpIndx, simplifyFractions((Fraction) top));//add the "simplified" object back in
+                fraction.getTop().add(tmpIndx, simplifyFractions((NumberStructure.Fraction) top));//add the "simplified" object back in
             }
         }
         for (EquationNode bot : fraction.getBottom()) {//simplify underlying fractions
-            if (bot instanceof Fraction) {//could be a fraction in a fraction
+            if (bot instanceof NumberStructure.Fraction) {//could be a fraction in a fraction
                 int tmpIndx = fraction.getBottom().indexOf(bot);//get indx of fraction
                 fraction.getBottom().remove(bot);//remove the object from the list
-                fraction.getBottom().add(tmpIndx, simplifyFractions((Fraction) bot));//add the "simplified" object back in
+                fraction.getBottom().add(tmpIndx, simplifyFractions((NumberStructure.Fraction) bot));//add the "simplified" object back in
             }
         }
 
@@ -322,13 +322,13 @@ public class MathOperations {
             }
         }
 
-        if (fraction.getTop().size() == 1 && fraction.getBottom().size() == 1 && fraction.getBottom().get(0).equals(Number.One)) //if the number does not equal zero
-            return new Number(fraction.getTop().get(0).getCoefficient(), fraction.getTop().get(0).getVariable());
+        if (fraction.getTop().size() == 1 && fraction.getBottom().size() == 1 && fraction.getBottom().get(0).equals(NumberStructure.Number.One)) //if the number does not equal zero
+            return new NumberStructure.Number(fraction.getTop().get(0).getCoefficient(), fraction.getTop().get(0).getVariable());
 
         else if(fraction.getTop().size() == 1 && fraction.getBottom().size() == 1//if only numbers are in the top and bottom.
-                && fraction.getTop().get(0).getVariable() == 0 && fraction.getTop().get(0) instanceof Number
-                && fraction.getBottom().get(0).getVariable() == 0 && fraction.getBottom().get(0) instanceof Number)
-            return new Number(fraction.getTop().get(0).getCoefficient()/fraction.getBottom().get(0).getCoefficient(),0);//return the division of these numbers
+                && fraction.getTop().get(0).getVariable() == 0 && fraction.getTop().get(0) instanceof NumberStructure.Number
+                && fraction.getBottom().get(0).getVariable() == 0 && fraction.getBottom().get(0) instanceof NumberStructure.Number)
+            return new NumberStructure.Number(fraction.getTop().get(0).getCoefficient()/fraction.getBottom().get(0).getCoefficient(),0);//return the division of these numbers
 
         return fraction;
 
@@ -357,7 +357,7 @@ public class MathOperations {
         for (EquationNode outside : list) {//these should all be nominals.  if not, clear list and break
             int possibleOutsideGCD = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i) instanceof Number) {
+                if (list.get(i) instanceof NumberStructure.Number) {
                     double outsideNum = outside.getCoefficient();
                     double insideNum = list.get(i).getCoefficient();
 
@@ -422,10 +422,10 @@ public class MathOperations {
                     ArrayList<EquationNode> tmpBot = new ArrayList<EquationNode>();
 
                     for (EquationNode node : fraction.getTop())
-                        tmpTop.add(new Number((node.getCoefficient() / x), node.getVariable()));
+                        tmpTop.add(new NumberStructure.Number((node.getCoefficient() / x), node.getVariable()));
 
                     for (EquationNode node : fraction.getBottom())
-                        tmpBot.add(new Number((node.getCoefficient() / x), node.getVariable()));
+                        tmpBot.add(new NumberStructure.Number((node.getCoefficient() / x), node.getVariable()));
 
                     fraction.getTop().clear();
                     fraction.getTop().addAll(tmpTop);
@@ -449,7 +449,7 @@ public class MathOperations {
     public static int findSmallestVariableExponent(ArrayList<EquationNode> list) {
         int smallestVar = -1;
         for (EquationNode x : list) {
-            if (x instanceof Number) {
+            if (x instanceof NumberStructure.Number) {
                 if (smallestVar == -1)
                     smallestVar = (int) x.getVariable();
                 else if (smallestVar > x.getVariable() && x.getVariable() >= 0)
@@ -479,9 +479,9 @@ public class MathOperations {
         ArrayList<EquationNode> tmpBot = new ArrayList<EquationNode>();
 
         for (EquationNode node : fraction.getTop())
-            tmpTop.add(new Number((node.getCoefficient()), node.getVariable() - reduceValue));
+            tmpTop.add(new NumberStructure.Number((node.getCoefficient()), node.getVariable() - reduceValue));
         for (EquationNode node : fraction.getBottom())
-            tmpBot.add(new Number((node.getCoefficient()), node.getVariable() - reduceValue));
+            tmpBot.add(new NumberStructure.Number((node.getCoefficient()), node.getVariable() - reduceValue));
 
         fraction.getTop().clear();
         fraction.getTop().addAll(tmpTop);
@@ -500,7 +500,7 @@ public class MathOperations {
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
         if(canRaiseToPower(terms)){//if exponent is or can be simplified to one integer.
-            if (terms.get(0) instanceof Number) {//meaning that the first term is actually something else. like a multiplication operator or something.
+            if (terms.get(0) instanceof NumberStructure.Number) {//meaning that the first term is actually something else. like a multiplication operator or something.
                 baseIsNominal(terms);
             }
             else
@@ -511,7 +511,7 @@ public class MathOperations {
 
         }
         else{//special case. base is nominal.  exponent is real number without variables. but it could be something like 2.2 or 22/10
-            if(terms.get(0) instanceof Number
+            if(terms.get(0) instanceof NumberStructure.Number
                     && terms.get(1).evaluate().size() == 1
                     && terms.get(1).evaluate().get(0) instanceof NumberStructure
                     && terms.get(1).evaluate().get(0).getTop().size() == 1
@@ -538,10 +538,10 @@ public class MathOperations {
         //get exponent.  will be cast to an int.
         if(expnt == 0) {
             terms.clear();
-            terms.add(Number.One);
+            terms.add(NumberStructure.Number.One);
         }
         else if(expnt <0){//negative exponent
-            Fraction flipped = new Fraction(terms.get(0).evaluate());
+            NumberStructure.Fraction flipped = new NumberStructure.Fraction(terms.get(0).evaluate());
             expnt = Math.abs(expnt);
 
             if(expnt-1==0){//not multiplied.  exponent of 1
@@ -596,13 +596,13 @@ public class MathOperations {
 
     private static void baseIsNominal(ArrayList<EquationNode> terms) {
         if (terms.get(0).getVariable() == 0) {//meaning that there is no variable in the base
-            Number simplified = new Number(Math.pow(terms.get(0).getCoefficient(),
+            NumberStructure.Number simplified = new NumberStructure.Number(Math.pow(terms.get(0).getCoefficient(),
                      terms.get(1).evaluate().get(0).getTop().get(0).getCoef()/terms.get(1).evaluate().get(0).getBottom().get(0).getCoef()), 0);
             terms.clear();
             terms.add(simplified);
 
         } else {//with a variable in the base
-            Number simplified = new Number(terms.get(0).getCoefficient(),
+            NumberStructure.Number simplified = new NumberStructure.Number(terms.get(0).getCoefficient(),
                     terms.get(0).getVariable() * ( terms.get(1).evaluate().get(0).getTop().get(0).getCoef()/terms.get(1).evaluate().get(0).getBottom().get(0).getCoef()));
             terms.clear();
             terms.add(simplified);
@@ -615,16 +615,16 @@ public class MathOperations {
      * @return boolean true if there is no variable in exponent, if exponent is a nominal (or fraction like 3/1) and is an int.
      */
     private static boolean canRaiseToPower(ArrayList<EquationNode> terms){
-        if (terms.get(1) instanceof Number && terms.get(1).getVariable() == 0 && terms.get(1).getCoefficient()==(int)terms.get(1).getCoefficient()) {
+        if (terms.get(1) instanceof NumberStructure.Number && terms.get(1).getVariable() == 0 && terms.get(1).getCoefficient()==(int)terms.get(1).getCoefficient()) {
             return true;
         } else {
             ArrayList<EquationNode> list = terms.get(1).evaluate();//get the list for the exponent
-            if (list.size() == 1 && list.get(0) instanceof Number && list.get(0).getVariable() == 0) {
+            if (list.size() == 1 && list.get(0) instanceof NumberStructure.Number && list.get(0).getVariable() == 0) {
                 return true;//if it simplifies to a nominal without a variable
-            } else if (list.size() == 1 && list.get(0) instanceof Fraction) {
+            } else if (list.size() == 1 && list.get(0) instanceof NumberStructure.Fraction) {
                 NumberStructure simplifiedFraction = simplifyFractions((NumberStructure) list.get(0));
-                return (simplifiedFraction.getTop().size() == 1 && simplifiedFraction.getTop().get(0) instanceof Number && simplifiedFraction.getTop().get(0).getVariable() == 0 &&
-                        simplifiedFraction.getBottom().size() == 1 && simplifiedFraction.getBottom().get(0).equals(Number.One));
+                return (simplifiedFraction.getTop().size() == 1 && simplifiedFraction.getTop().get(0) instanceof NumberStructure.Number && simplifiedFraction.getTop().get(0).getVariable() == 0 &&
+                        simplifiedFraction.getBottom().size() == 1 && simplifiedFraction.getBottom().get(0).equals(NumberStructure.Number.One));
                 //this returns true if the fraction is something like (3/1)
             }
             return false;
@@ -640,7 +640,7 @@ public class MathOperations {
     public static int countFractions(ArrayList<EquationNode> list){
         int count = 0;
         for(EquationNode node: list){
-            if(node instanceof Fraction)
+            if(node instanceof NumberStructure.Fraction)
                 count ++;
         }
         return count;
@@ -656,7 +656,7 @@ public class MathOperations {
     public static double findHighestVariableExponent(ArrayList<EquationNode> list){
         double highestExponent = 0;
         for(EquationNode node: list){
-            if(node instanceof Number){
+            if(node instanceof NumberStructure.Number){
                 if(node.getVariable()>highestExponent)
                     highestExponent = node.getVariable();
             }
@@ -673,7 +673,7 @@ public class MathOperations {
     public static int countNominalsWithVars(ArrayList<EquationNode> list){
         int count = 0;
         for(EquationNode node: list){
-            if(node instanceof Number && node.getVariable()!=0)
+            if(node instanceof NumberStructure.Number && node.getVariable()!=0)
                 count ++;
         }
         return count;
@@ -686,12 +686,12 @@ public class MathOperations {
      * @param degree the specified variable degree to find
      * @return first instance of Nth degree Number, or Number.One if nothing of that degree is found
      */
-    public static Number findNthDegreeNominal(double degree,ArrayList<EquationNode> list ){
+    public static NumberStructure.Number findNthDegreeNominal(double degree,ArrayList<EquationNode> list ){
         for(EquationNode node: list){
             if(node.getVariable() == degree)
-                return (Number)node;
+                return (NumberStructure.Number)node;
         }
-        return Number.Zero;
+        return NumberStructure.Number.Zero;
     }
 
 }

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Simplifier.Number Simplifier.NumberStructure
  * Most basic form of number storage
@@ -76,7 +78,25 @@ public class Number extends NumberStructure {
 
     @Override
     public String toString() {
-        return getCoefficient() + "";
+        if(Coefficient == 0)
+            return 0+"";
+        String string = "";
+        if(PICount != 0)
+            string += "("+PICount+"pi)";
+        if(eCount != 0)
+            string += "("+eCount+"e)";
+        if(Coefficient != 1 || string.length() == 0)
+            string = Coefficient + string;
+        return string;
     }
 
+    /**
+     * Get the list of simplified terms,
+     *
+     * @return simplified list of operation in Nominals and Fractions
+     */
+    @Override
+    public ArrayList<EquationNode> evaluate() {
+        return null;
+    }
 }

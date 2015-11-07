@@ -10,19 +10,7 @@ public class Variable extends NumberStructure{
     private final NumberStructure coefficient;
     private final char variable;
     private final NumberStructure exponent;
-    public static final ArrayList<NumberStructure> DEFAULT_VARIABLE_LIST = new ArrayList<NumberStructure>(Arrays.asList(new Variable(Number.One, 'x',Number.Zero)));
-
-    public char getVariable() {
-        return variable;
-    }
-
-    public NumberStructure getExponent() {
-        return exponent;
-    }
-
-    public NumberStructure getCoefficient() {
-        return coefficient;
-    }
+    public static final ArrayList<Variable> DEFAULT_VARIABLE_LIST = new ArrayList<Variable>(Arrays.asList(new Variable(NumberStructure.Number.One, 'x', NumberStructure.Number.Zero)));
 
     @Override
     public String toString() {
@@ -31,14 +19,14 @@ public class Variable extends NumberStructure{
 
     public Variable(NumberStructure coefficient, char variable, NumberStructure exponent){
         if(coefficient == null)
-            this.coefficient = Number.One;
+            this.coefficient = NumberStructure.Number.One;
         else
             this.coefficient = coefficient;
 
         this.variable = variable;
 
         if(exponent == null)
-            this.exponent = Number.One;
+            this.exponent = NumberStructure.Number.One;
         else
             this.exponent = exponent;
     }

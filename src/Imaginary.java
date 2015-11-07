@@ -6,7 +6,22 @@ import java.util.ArrayList;
  */
 public class Imaginary extends NumberStructure {
 
-    private final
+    private final NumberStructure Coefficient;
+    private final NumberStructure Exponent;
+
+    public static final Imaginary ZERO = new Imaginary(Number.Zero, Number.One);
+    public static final Imaginary ONE = new Imaginary(Number.One, Number.One);
+
+    public Imaginary(NumberStructure coefficient, NumberStructure exponent){
+        if (coefficient == null)
+            coefficient = Number.One;
+        if (exponent == null)
+            exponent = Number.One;
+        Coefficient = coefficient;
+        Exponent = exponent;
+
+    }
+
     /**
      * Get the list of simplified terms,
      *

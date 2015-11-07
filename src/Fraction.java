@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 /**
- * Simplifier.Fraction Simplifier.NumberStructure used to represent rational fractions.
+ * Simplifier.NumberStructurefier.NumberStructure used to represent rational fractions.
  * Created by rgw3d on 10/9/2014.
  */
-public class Fraction extends NumberStructure{
+public class Fraction extends NumberStructure {
 
     private final ArrayList<NumberStructure> Top;
     private final ArrayList<NumberStructure> Bottom;
