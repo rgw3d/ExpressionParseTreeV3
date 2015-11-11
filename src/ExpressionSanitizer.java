@@ -1,7 +1,3 @@
-import Simplifier.ExpressionParser;
-import Simplifier.InputException;
-
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,42 +10,25 @@ public class ExpressionSanitizer {
     public final static String QUIT_KEYWORD = "quit";
     private final static String ERROR_PREFIX = "Bad Expression. Please Revise\n";
 
-    /**
-     * @return String containing input expression
-     * @throws InputException
-     */
-    public static String readInput() throws InputException {
-        System.out.print("Enter Expression:  ");
-        String input = new Scanner(System.in).nextLine().toLowerCase();
-        System.out.println();
+    private final String ReformattedExpression;
+    private final char[] Variables;
+
+    public ExpressionSanitizer(String input) throws InputException {
         if (input.equalsIgnoreCase(QUIT_KEYWORD))
             throw new InputException(QUIT_KEYWORD);
 
-        input = extractConstants(input);
         isEquation(input);//checks for input errors
-        System.out.println("Syntax Passed!");
-        System.out.println("\tParsing with respect to: " + ExpressionParser.variable);
 
-        System.out.println("\tInput Equation: " + input.replace("+"," + "));
-        input = reformatInput(input);
-        System.out.println("\tReformatted Equation: " + input.replace("+"," + "));
-
-        return input;
+        Variables = extractVariables(input);
+        ReformattedExpression = reformatInput(input);
     }
 
-    /**
-     * Extract the actual mathematical constants PI and E
-     * Call this before the other input sanitation methods to replace the constants
-     *
-     * @param input the input string.
-     * @return String of the updated input string
-     */
-    public static String extractConstants(String input) {
+    public String getReformattedExpression() {
+        return ReformattedExpression;
+    }
 
-        input = input.replace("pi", Math.PI + "");//change pi to the approx value
-        input = input.replace("e", Math.E + "");//change e to the approx value
-
-        return input;
+    public char[] getVariables() {
+        return Variables;
     }
 
     /**
@@ -82,22 +61,6 @@ public class ExpressionSanitizer {
             throw new InputException(ERROR_PREFIX + "Illegal Character: " + m.group());
         }
 
-        String variable = "";//find the variable
-        p = Pattern.compile("[a-z]");
-        for (char indx : input.toCharArray()) {
-            m = p.matcher(indx + "");
-            if (m.find()) {
-                if (variable.equals("")) {
-                    variable = m.group();
-                } else if (!variable.equals(m.group())) {
-                    throw new InputException(ERROR_PREFIX + "Mixing variables! Use only one variable.");
-                }
-            }
-        }
-        if (!variable.equals("")) {
-            ExpressionParser.variable = variable;
-        }
-
         p = Pattern.compile("[\\+,/,\\^,\\*]{2,}");
         m = p.matcher(input);
         if (m.find()) {
@@ -107,6 +70,12 @@ public class ExpressionSanitizer {
         parenthesisCheck(input);
 
         //good syntax if no errors are thrown.
+    }
+
+    public static char[] extractVariables(String input){
+        Pattern p = Pattern.compile("[a-z]");
+        Matcher m = p.matcher(input);
+        return m.group().replace("p","").replace("i","").replace("e","").toCharArray();
     }
 
     /**
@@ -157,9 +126,9 @@ public class ExpressionSanitizer {
 
         input = input.replace("++-", "+-");//for the longest time I didn't spot this. I assumed that everyone would put in -, and not +-
 
-        input = input.replace(ExpressionParser.variable + "(", ExpressionParser.variable + "*("); //for situations like: x(x+3).  before the fix, that would not work
-
-        input = input.replace(")" + ExpressionParser.variable, ")*" + ExpressionParser.variable); //same as above
+//        input = inferVairableMultiplication(input);//replaces the lines below-- acomidates mutliple variables
+        //input = input.replace(ExpressionParser.variable + "(", ExpressionParser.variable + "*("); //for situations like: x(x+3).  before the fix, that would not work
+        //input = input.replace(")" + ExpressionParser.variable, ")*" + ExpressionParser.variable); //same as above
 
         if (input.startsWith("+-"))
             input = input.substring(1);//can't start with a +. Happens because of above replacements
