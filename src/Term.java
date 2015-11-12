@@ -24,7 +24,7 @@ public class Term extends NumberStructure {
     }
 
     /**
-     * gets the number value for the Simplifier.EquationNode
+     * gets the number value for the Simplifier.ExpressionNode
      *
      * @return double number value
      */
@@ -33,7 +33,7 @@ public class Term extends NumberStructure {
     }
 
     /**
-     * gets the variable value for the Simplifier.EquationNode
+     * gets the variable value for the Simplifier.ExpressionNode
      *
      * @return double Var value
      */
@@ -51,8 +51,8 @@ public class Term extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<EquationNode> evaluate() {
-        return new ArrayList<EquationNode>(Arrays.asList(this));
+    public ArrayList<ExpressionNode> evaluate() {
+        return new ArrayList<ExpressionNode>(Arrays.asList(this));
     }
 
 

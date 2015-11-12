@@ -32,7 +32,7 @@ public class Main {
                 continue;//after the error message jump to the end of the loop
             }
 
-            //ArrayList<EquationNode> result = simplifyExpression(input);
+            //ArrayList<ExpressionNode> result = simplifyExpression(input);
             //System.out.println("\tResult: " + printSimplifiedExpression(result));//get the formatted result here
 
 

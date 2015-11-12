@@ -10,19 +10,19 @@ public class MathOperations {
 
     /**
      * This method will do addition in a list that has two terms
-     * @param terms all Simplifier.EquationNode objects to add.  size() must == 2
+     * @param terms all Simplifier.ExpressionNode objects to add.  size() must == 2
      */
-    public static void additionControl(ArrayList<EquationNode> terms){
+    public static void additionControl(ArrayList<ExpressionNode> terms){
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
-        ArrayList<EquationNode> allTerms = terms.get(0).evaluate();
+        ArrayList<ExpressionNode> allTerms = terms.get(0).evaluate();
         allTerms.addAll(terms.get(1).evaluate());
         if(sameVariablePower(allTerms)){
             terms.clear();
             terms.add(variableIndependentAddition(allTerms));
         }
         else{
-            ArrayList<EquationNode> complexAddition = complexAdditionControl(allTerms);
+            ArrayList<ExpressionNode> complexAddition = complexAdditionControl(allTerms);
             terms.clear();//add the results back to the same list, so we clear the old list
             terms.addAll(complexAddition);
 
@@ -35,12 +35,12 @@ public class MathOperations {
      * @param terms list of all terms to be added
      * @return simplified list of all terms that were added
      */
-    private static ArrayList<EquationNode> complexAdditionControl(ArrayList<EquationNode> terms) {
-        ArrayList<EquationNode> nominalsOnly = new ArrayList<EquationNode>();
-        ArrayList<EquationNode> others = new ArrayList<EquationNode>();
+    private static ArrayList<ExpressionNode> complexAdditionControl(ArrayList<ExpressionNode> terms) {
+        ArrayList<ExpressionNode> nominalsOnly = new ArrayList<ExpressionNode>();
+        ArrayList<ExpressionNode> others = new ArrayList<ExpressionNode>();
 
 
-        for(EquationNode node: terms){
+        for(ExpressionNode node: terms){
             if(node instanceof NumberStructure.Number)
                 nominalsOnly.add(node);
             else
@@ -60,14 +60,14 @@ public class MathOperations {
     }
 
     /**
-     * Checks to see if the variables of a list of Simplifier.EquationNode objects have the same getVariable() value.
+     * Checks to see if the variables of a list of Simplifier.ExpressionNode objects have the same getVariable() value.
      * this would mean that the terms are easy to add together, and simply summing the getCoefficient() values is sufficient
-     * @param terms all Simplifier.EquationNode objects to test
+     * @param terms all Simplifier.ExpressionNode objects to test
      * @return boolean if getVariable() is the same in all terms objects.  if any term is not instanceOf Simplifier.Number, returns false
      */
-    private static boolean sameVariablePower(ArrayList<EquationNode> terms){
+    private static boolean sameVariablePower(ArrayList<ExpressionNode> terms){
         double variablePower = terms.get(0).getVariable();
-        for(EquationNode node: terms){
+        for(ExpressionNode node: terms){
             if(!(node instanceof NumberStructure.Number) || node.getVariable()!=variablePower)
                 return false;
         }
@@ -77,12 +77,12 @@ public class MathOperations {
     /**
      * Sums the getCoefficient() value of a list of terms.
      * Assumes sameVariablePower()==true;
-     * @param terms all Simplifier.EquationNode objects to add
+     * @param terms all Simplifier.ExpressionNode objects to add
      * @return Simplifier.Number that contains summed value along with correct getVariable() value.
      */
-    private static NumberStructure.Number variableIndependentAddition(ArrayList<EquationNode> terms){
+    private static NumberStructure.Number variableIndependentAddition(ArrayList<ExpressionNode> terms){
         double total = 0;
-        for(EquationNode node: terms)
+        for(ExpressionNode node: terms)
             total+=node.getCoefficient();
         return new NumberStructure.Number(total,terms.get(0).getVariable());
     }
@@ -90,17 +90,17 @@ public class MathOperations {
     /**
      * Run if sameVariablePower()==false;
      * Adds numbers if their variable exponents allow them to.
-     * @param terms all Simplifier.EquationNode objects to add
+     * @param terms all Simplifier.ExpressionNode objects to add
      */
-    private static void variableDependentAddition(ArrayList<EquationNode> terms) {
-        Hashtable<Double, ArrayList<EquationNode>> sortedNominals = new Hashtable<Double, ArrayList<EquationNode>>();
+    private static void variableDependentAddition(ArrayList<ExpressionNode> terms) {
+        Hashtable<Double, ArrayList<ExpressionNode>> sortedNominals = new Hashtable<Double, ArrayList<ExpressionNode>>();
 
-        for (EquationNode nom : terms) {//add everyone to their respective groups
+        for (ExpressionNode nom : terms) {//add everyone to their respective groups
             Double nomBottom = nom.getVariable();//the variable value of the nominal
             try {
-                sortedNominals.get(nomBottom).add(nom);//use the key to get the ArrayList<Simplifier.EquationNode> and then add the nominal
+                sortedNominals.get(nomBottom).add(nom);//use the key to get the ArrayList<Simplifier.ExpressionNode> and then add the nominal
             } catch (NullPointerException E) {//key was not mapped to a value
-                ArrayList<EquationNode> tmp = new ArrayList<EquationNode>();
+                ArrayList<ExpressionNode> tmp = new ArrayList<ExpressionNode>();
                 tmp.add(nom);
                 sortedNominals.put(nomBottom, tmp);
             }
@@ -121,13 +121,13 @@ public class MathOperations {
 
     /**
      * This is run if there are things other than Simplifier.Number type objects to add together
-     * @param terms all Simplifier.EquationNode objects to add
+     * @param terms all Simplifier.ExpressionNode objects to add
      */
-    private static void mixedAddition(ArrayList<EquationNode> terms) {
-        ArrayList<EquationNode> fractions = new ArrayList<EquationNode>();
-        ArrayList<EquationNode> others = new ArrayList<EquationNode>();//anything that is not a fraction
+    private static void mixedAddition(ArrayList<ExpressionNode> terms) {
+        ArrayList<ExpressionNode> fractions = new ArrayList<ExpressionNode>();
+        ArrayList<ExpressionNode> others = new ArrayList<ExpressionNode>();//anything that is not a fraction
 
-        for(EquationNode node: terms){
+        for(ExpressionNode node: terms){
             if(node instanceof NumberStructure.Fraction)
                 fractions.add(node);
             else
@@ -145,16 +145,16 @@ public class MathOperations {
     /**
      * run if there are fractions to add together.
      * Will add fractions together if their bottoms are the same.  (common denominator)
-     * @param terms all Simplifier.EquationNode objects to add
+     * @param terms all Simplifier.ExpressionNode objects to add
      */
-    private static void fractionAddition(ArrayList<EquationNode> terms) {
-        Hashtable<ArrayList<EquationNode>, ArrayList<EquationNode>> sortedFractions = new Hashtable<ArrayList<EquationNode>, ArrayList<EquationNode>>();
+    private static void fractionAddition(ArrayList<ExpressionNode> terms) {
+        Hashtable<ArrayList<ExpressionNode>, ArrayList<ExpressionNode>> sortedFractions = new Hashtable<ArrayList<ExpressionNode>, ArrayList<ExpressionNode>>();
 
-        for (EquationNode node : terms) {
+        for (ExpressionNode node : terms) {
             try {
                 sortedFractions.get(node.getBottom()).add(node);//from the node.getBottom() arrayList key, add to it the fraction
             } catch (NullPointerException E) {//key was not mapped to a value
-                ArrayList<EquationNode> tmp = new ArrayList<EquationNode>();
+                ArrayList<ExpressionNode> tmp = new ArrayList<ExpressionNode>();
                 tmp.add(node);
                 sortedFractions.put(node.getBottom(), tmp);
             }
@@ -162,9 +162,9 @@ public class MathOperations {
         }
 
         terms.clear();
-        for (ArrayList<EquationNode> x : sortedFractions.keySet()) {
-            ArrayList<EquationNode> addTop = new ArrayList<EquationNode>();
-            for(EquationNode fraction: sortedFractions.get(x))
+        for (ArrayList<ExpressionNode> x : sortedFractions.keySet()) {
+            ArrayList<ExpressionNode> addTop = new ArrayList<ExpressionNode>();
+            for(ExpressionNode fraction: sortedFractions.get(x))
                 addTop.addAll(fraction.getTop());
 
             variableDependentAddition(addTop);
@@ -178,10 +178,10 @@ public class MathOperations {
 
     /**
      * Multiplication Control.  This starts the multiplication simplification process
-     * @param terms all Simplifier.EquationNode objects to multiply.  size() must == 2
+     * @param terms all Simplifier.ExpressionNode objects to multiply.  size() must == 2
      *
      */
-    public static void multiplicationControl(ArrayList<EquationNode> terms){
+    public static void multiplicationControl(ArrayList<ExpressionNode> terms){
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
 
@@ -191,7 +191,7 @@ public class MathOperations {
             terms.add(product);
         }
         else {
-            ArrayList<EquationNode> products = multiplyLists(terms.get(0).evaluate(), terms.get(1).evaluate());
+            ArrayList<ExpressionNode> products = multiplyLists(terms.get(0).evaluate(), terms.get(1).evaluate());
             terms.clear();
             terms.addAll(complexAdditionControl(products));
         }
@@ -202,14 +202,14 @@ public class MathOperations {
      * @param terms all Simplifier.NumberStructure objects to multiply.  Must be instanceOf Simplifier.NumberStructure
      * @return Simplifier.NumberStructure, either a fraction or nominal
      */
-    private static NumberStructure nominalMultiplication(ArrayList<EquationNode> terms) {
+    private static NumberStructure nominalMultiplication(ArrayList<ExpressionNode> terms) {
         NumberStructure.Fraction fraction = new NumberStructure.Fraction(NumberStructure.Number.One);
-        for(EquationNode node : terms){
-            ArrayList<EquationNode> tmpTop = multiplyLists(fraction.getTop(), node.getTop());
+        for(ExpressionNode node : terms){
+            ArrayList<ExpressionNode> tmpTop = multiplyLists(fraction.getTop(), node.getTop());
             fraction.getTop().clear();
             fraction.getTop().addAll(tmpTop);
 
-            ArrayList<EquationNode> tmpBot = multiplyLists(fraction.getBottom(), node.getBottom());
+            ArrayList<ExpressionNode> tmpBot = multiplyLists(fraction.getBottom(), node.getBottom());
             fraction.getBottom().clear();
             fraction.getBottom().addAll(tmpBot);
         }
@@ -227,21 +227,21 @@ public class MathOperations {
      * @param right the right arrayList
      * @return the multiplied product list
      */
-    private static ArrayList<EquationNode> multiplyLists(ArrayList<EquationNode> left, ArrayList<EquationNode> right) {
-        ArrayList<EquationNode> result = new ArrayList<EquationNode>();
+    private static ArrayList<ExpressionNode> multiplyLists(ArrayList<ExpressionNode> left, ArrayList<ExpressionNode> right) {
+        ArrayList<ExpressionNode> result = new ArrayList<ExpressionNode>();
 
-        for(EquationNode leftTerm : left){
-            for(EquationNode rightTerm : right){
+        for(ExpressionNode leftTerm : left){
+            for(ExpressionNode rightTerm : right){
                 if(leftTerm instanceof NumberStructure.Number && rightTerm instanceof NumberStructure.Number)
                     result.add(new NumberStructure.Number(leftTerm.getCoefficient()*rightTerm.getCoefficient(),leftTerm.getVariable() + rightTerm.getVariable()));
                 else if( leftTerm instanceof NumberStructure && rightTerm instanceof NumberStructure) {
-                    ArrayList<EquationNode> leftAndRightNodes = new ArrayList<EquationNode>();
+                    ArrayList<ExpressionNode> leftAndRightNodes = new ArrayList<ExpressionNode>();
                     leftAndRightNodes.add(leftTerm);
                     leftAndRightNodes.add(rightTerm);
                     result.add(nominalMultiplication(leftAndRightNodes));
                 }
                 else if( leftTerm instanceof Operator || rightTerm instanceof Operator){
-                    ArrayList<EquationNode> tmpList = new ArrayList<EquationNode>();
+                    ArrayList<ExpressionNode> tmpList = new ArrayList<ExpressionNode>();
                     tmpList.add(leftTerm);
                     tmpList.add(rightTerm);
                     result.add(new MultiplicationOperator(tmpList));
@@ -253,13 +253,13 @@ public class MathOperations {
 
     /**
      * Used to determine the path of the multiplication operation.
-     * @param terms all Simplifier.EquationNode objects to test
+     * @param terms all Simplifier.ExpressionNode objects to test
      * @return boolean true if terms consists of just NumberStructures (fractions or Nominals)
      */
-    private static boolean onlyNumberStructures(ArrayList<EquationNode> terms) {
+    private static boolean onlyNumberStructures(ArrayList<ExpressionNode> terms) {
         int numberStructures = 0;
 
-        for(EquationNode node : terms){
+        for(ExpressionNode node : terms){
             if(node instanceof NumberStructure)
                 numberStructures++;
         }
@@ -269,9 +269,9 @@ public class MathOperations {
 
     /**
      * Starts the division process.  This returns a fraction or a nominal, depending on what can be divided
-     * @param terms all Simplifier.EquationNode objects to divide.  size() must == 2
+     * @param terms all Simplifier.ExpressionNode objects to divide.  size() must == 2
      */
-    public static void divisionControl(ArrayList<EquationNode> terms) {
+    public static void divisionControl(ArrayList<ExpressionNode> terms) {
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
         NumberStructure fraction = new NumberStructure.Fraction(terms.get(0).evaluate(), terms.get(1).evaluate());
@@ -291,14 +291,14 @@ public class MathOperations {
         if(fraction instanceof NumberStructure.Number)//if a nominal is sent. cannot be simplified
             return fraction;
 
-        for (EquationNode top : fraction.getTop()) {//simplify underlying fractions
+        for (ExpressionNode top : fraction.getTop()) {//simplify underlying fractions
             if (top instanceof NumberStructure.Fraction) {//could be a fraction in a fraction
                 int tmpIndx = fraction.getTop().indexOf(top);//get indx of fraction
                 fraction.getTop().remove(top);//remove the object from the list
                 fraction.getTop().add(tmpIndx, simplifyFractions((NumberStructure.Fraction) top));//add the "simplified" object back in
             }
         }
-        for (EquationNode bot : fraction.getBottom()) {//simplify underlying fractions
+        for (ExpressionNode bot : fraction.getBottom()) {//simplify underlying fractions
             if (bot instanceof NumberStructure.Fraction) {//could be a fraction in a fraction
                 int tmpIndx = fraction.getBottom().indexOf(bot);//get indx of fraction
                 fraction.getBottom().remove(bot);//remove the object from the list
@@ -351,10 +351,10 @@ public class MathOperations {
      * @param divisorList the list of GCDs to be added to.  This list will be cleared if the returned value of this function is false
      * @return boolean of if it was able to generate a list of GCDs
      */
-    private static boolean findListGCD(ArrayList<EquationNode> list, ArrayList<Integer> divisorList) {
+    private static boolean findListGCD(ArrayList<ExpressionNode> list, ArrayList<Integer> divisorList) {
         boolean canDivide = true;
         outerLoop:
-        for (EquationNode outside : list) {//these should all be nominals.  if not, clear list and break
+        for (ExpressionNode outside : list) {//these should all be nominals.  if not, clear list and break
             int possibleOutsideGCD = 0;
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i) instanceof NumberStructure.Number) {
@@ -418,13 +418,13 @@ public class MathOperations {
         for (Integer x : botDivisors) {
             for (Integer y : topDivisors) {
                 if (y % x == 0) {//yay it actually works. this means that the greatest divisor has been found.
-                    ArrayList<EquationNode> tmpTop = new ArrayList<EquationNode>();
-                    ArrayList<EquationNode> tmpBot = new ArrayList<EquationNode>();
+                    ArrayList<ExpressionNode> tmpTop = new ArrayList<ExpressionNode>();
+                    ArrayList<ExpressionNode> tmpBot = new ArrayList<ExpressionNode>();
 
-                    for (EquationNode node : fraction.getTop())
+                    for (ExpressionNode node : fraction.getTop())
                         tmpTop.add(new NumberStructure.Number((node.getCoefficient() / x), node.getVariable()));
 
-                    for (EquationNode node : fraction.getBottom())
+                    for (ExpressionNode node : fraction.getBottom())
                         tmpBot.add(new NumberStructure.Number((node.getCoefficient() / x), node.getVariable()));
 
                     fraction.getTop().clear();
@@ -446,9 +446,9 @@ public class MathOperations {
      * @param list list of Nominals! Assumed that fractions are not a part of this list!
      * @return the smallest variable exponent in the list
      */
-    public static int findSmallestVariableExponent(ArrayList<EquationNode> list) {
+    public static int findSmallestVariableExponent(ArrayList<ExpressionNode> list) {
         int smallestVar = -1;
-        for (EquationNode x : list) {
+        for (ExpressionNode x : list) {
             if (x instanceof NumberStructure.Number) {
                 if (smallestVar == -1)
                     smallestVar = (int) x.getVariable();
@@ -475,12 +475,12 @@ public class MathOperations {
         else
             reduceValue = topSmallestVar;
 
-        ArrayList<EquationNode> tmpTop = new ArrayList<EquationNode>();
-        ArrayList<EquationNode> tmpBot = new ArrayList<EquationNode>();
+        ArrayList<ExpressionNode> tmpTop = new ArrayList<ExpressionNode>();
+        ArrayList<ExpressionNode> tmpBot = new ArrayList<ExpressionNode>();
 
-        for (EquationNode node : fraction.getTop())
+        for (ExpressionNode node : fraction.getTop())
             tmpTop.add(new NumberStructure.Number((node.getCoefficient()), node.getVariable() - reduceValue));
-        for (EquationNode node : fraction.getBottom())
+        for (ExpressionNode node : fraction.getBottom())
             tmpBot.add(new NumberStructure.Number((node.getCoefficient()), node.getVariable() - reduceValue));
 
         fraction.getTop().clear();
@@ -494,9 +494,9 @@ public class MathOperations {
 
     /**
      * This starts the process of raising something to a power. terms.get(0) is the base.  terms.get(1) is the power
-     * @param terms all Simplifier.EquationNode objects to be a part of this operation.  size() must == 2
+     * @param terms all Simplifier.ExpressionNode objects to be a part of this operation.  size() must == 2
      */
-    public static void powerControl(ArrayList<EquationNode> terms){
+    public static void powerControl(ArrayList<ExpressionNode> terms){
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
         if(canRaiseToPower(terms)){//if exponent is or can be simplified to one integer.
@@ -533,7 +533,7 @@ public class MathOperations {
      * Raises the returned list of the operator (the base, terms.get(0)) to the power (terms.get(1).getCoefficient())
      * @param terms the base and the exponent to simplify
      */
-    private static void baseIsOperator(ArrayList<EquationNode> terms) {
+    private static void baseIsOperator(ArrayList<ExpressionNode> terms) {
         int expnt = (int) terms.get(1).evaluate().get(0).getTop().get(0).getCoef();
         //get exponent.  will be cast to an int.
         if(expnt == 0) {
@@ -570,7 +570,7 @@ public class MathOperations {
         else
         {
             if(expnt-1==0){//not multiplied
-                ArrayList<EquationNode> simplified = terms.get(0).evaluate();
+                ArrayList<ExpressionNode> simplified = terms.get(0).evaluate();
                 terms.clear();
                 terms.addAll(simplified);
             }
@@ -594,7 +594,7 @@ public class MathOperations {
         }
     }
 
-    private static void baseIsNominal(ArrayList<EquationNode> terms) {
+    private static void baseIsNominal(ArrayList<ExpressionNode> terms) {
         if (terms.get(0).getVariable() == 0) {//meaning that there is no variable in the base
             NumberStructure.Number simplified = new NumberStructure.Number(Math.pow(terms.get(0).getCoefficient(),
                      terms.get(1).evaluate().get(0).getTop().get(0).getCoef()/terms.get(1).evaluate().get(0).getBottom().get(0).getCoef()), 0);
@@ -614,11 +614,11 @@ public class MathOperations {
      * if this is true, anything can be raised to this exponent
      * @return boolean true if there is no variable in exponent, if exponent is a nominal (or fraction like 3/1) and is an int.
      */
-    private static boolean canRaiseToPower(ArrayList<EquationNode> terms){
+    private static boolean canRaiseToPower(ArrayList<ExpressionNode> terms){
         if (terms.get(1) instanceof NumberStructure.Number && terms.get(1).getVariable() == 0 && terms.get(1).getCoefficient()==(int)terms.get(1).getCoefficient()) {
             return true;
         } else {
-            ArrayList<EquationNode> list = terms.get(1).evaluate();//get the list for the exponent
+            ArrayList<ExpressionNode> list = terms.get(1).evaluate();//get the list for the exponent
             if (list.size() == 1 && list.get(0) instanceof NumberStructure.Number && list.get(0).getVariable() == 0) {
                 return true;//if it simplifies to a nominal without a variable
             } else if (list.size() == 1 && list.get(0) instanceof NumberStructure.Fraction) {
@@ -637,9 +637,9 @@ public class MathOperations {
      * @param list the list of EquationNodes
      * @return count of the fractions in the list
      */
-    public static int countFractions(ArrayList<EquationNode> list){
+    public static int countFractions(ArrayList<ExpressionNode> list){
         int count = 0;
-        for(EquationNode node: list){
+        for(ExpressionNode node: list){
             if(node instanceof NumberStructure.Fraction)
                 count ++;
         }
@@ -653,9 +653,9 @@ public class MathOperations {
      * @param list the list of EquationNodes
      * @return double of the highestExponent
      */
-    public static double findHighestVariableExponent(ArrayList<EquationNode> list){
+    public static double findHighestVariableExponent(ArrayList<ExpressionNode> list){
         double highestExponent = 0;
-        for(EquationNode node: list){
+        for(ExpressionNode node: list){
             if(node instanceof NumberStructure.Number){
                 if(node.getVariable()>highestExponent)
                     highestExponent = node.getVariable();
@@ -670,9 +670,9 @@ public class MathOperations {
      * @param list the list of EquationNodes
      * @return count of the Nominals with variable exponent values that are not zero
      */
-    public static int countNominalsWithVars(ArrayList<EquationNode> list){
+    public static int countNominalsWithVars(ArrayList<ExpressionNode> list){
         int count = 0;
-        for(EquationNode node: list){
+        for(ExpressionNode node: list){
             if(node instanceof NumberStructure.Number && node.getVariable()!=0)
                 count ++;
         }
@@ -686,8 +686,8 @@ public class MathOperations {
      * @param degree the specified variable degree to find
      * @return first instance of Nth degree Number, or Number.ONE if nothing of that degree is found
      */
-    public static NumberStructure.Number findNthDegreeNominal(double degree,ArrayList<EquationNode> list ){
-        for(EquationNode node: list){
+    public static NumberStructure.Number findNthDegreeNominal(double degree,ArrayList<ExpressionNode> list ){
+        for(ExpressionNode node: list){
             if(node.getVariable() == degree)
                 return (NumberStructure.Number)node;
         }

@@ -48,8 +48,8 @@ public class Fraction extends NumberStructure {
      * @return ArrayList of top
      */
     @Override
-    public ArrayList<EquationNode> evaluate() {
-        return new ArrayList<EquationNode>(Arrays.asList(this));
+    public ArrayList<ExpressionNode> evaluate() {
+        return new ArrayList<ExpressionNode>(Arrays.asList(this));
     }
 
     @Override

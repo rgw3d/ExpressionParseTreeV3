@@ -29,8 +29,8 @@ public class Exponent extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<EquationNode> evaluate() {
-        return new ArrayList<EquationNode>(Arrays.asList(this));
+    public ArrayList<ExpressionNode> evaluate() {
+        return new ArrayList<ExpressionNode>(Arrays.asList(this));
     }
 
     @Override

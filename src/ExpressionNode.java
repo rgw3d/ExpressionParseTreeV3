@@ -5,12 +5,12 @@ import java.util.ArrayList;
  * provides methods for all subclasses
  * Created by rgw3d on 11/5/2015.
  */
-public interface EquationNode {
+public interface ExpressionNode {
 
     /**
      * Get the list of simplified terms,
      * @return simplified list of operation in Nominals and Fractions
      */
-    public ArrayList<EquationNode> evaluate();
+    public ArrayList<ExpressionNode> evaluate();
 
 }

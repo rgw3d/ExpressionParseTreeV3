@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 
 /**
- * Wrapper Object to all of the math operations
+ * Wrapper Object to all of the math operations and parsing
  * Created by rgw3d on 11/5/2015.
  */
 public class Expression {
-    private ArrayList<EquationNode> Terms;//used for the final simplification
+    private ArrayList<ExpressionNode> Terms;//used for the final simplification
     private final char[] Variables;//
-    //private final Operator RootOperator;
+    private final ExpressionNode RootOperator;
     private final String inputExpression;
     private final String ReformattedExpression;
 
@@ -17,7 +17,8 @@ public class Expression {
         ReformattedExpression = expressionSanitizer.getReformattedExpression();
         Variables = expressionSanitizer.getVariables();
 
-        //RootOperator = ExpressionParser.parse(ReformattedExpression,Variables);
+        ExpressionParser expressionParser = new ExpressionParser(ReformattedExpression,Variables);
+        RootOperator = expressionParser.parseEquation();
     }
 
     public char[] getVariables() {
@@ -25,7 +26,7 @@ public class Expression {
     }
 
    // public Operator getRootOperator() {
-    //j    return RootOperator;
+    //    return RootOperator;
     //}
 
     public String getInputExpression() {
