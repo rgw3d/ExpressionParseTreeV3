@@ -21,7 +21,7 @@ public class PowerOperator extends Operator {
     @Override
     public ArrayList<EquationNode> evaluate() {
         if(Terms == null){
-            MathOperations.powerControl(Terms);
+            //MathOperations.powerControl(Terms);
         }
         return Terms;
     }

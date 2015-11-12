@@ -24,7 +24,7 @@ public class MultiplicationOperator extends Operator {
     @Override
     public ArrayList<EquationNode> evaluate() {
         if (Terms == null) {
-            MathOperations.multiplicationControl(Terms);
+//            MathOperations.multiplicationControl(Terms);
         }
         return Terms;
     }

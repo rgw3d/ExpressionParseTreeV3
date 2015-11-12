@@ -72,7 +72,7 @@ public class ExpressionParser {
 
             } else if (!hasParen && op.equals("^")) {
                 ParseNominal parseNominal = new ParseNominal(input);//subclass used here to parse Simplifier.Nominal
-                return new minal(parseNominal.constantCount, parseNominal.varExponent);
+                return new nominal(parseNominal.constantCount, parseNominal.varExponent);
             }
 
         }

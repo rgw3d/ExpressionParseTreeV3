@@ -6,34 +6,34 @@ import java.util.ArrayList;
  */
 public class Expression {
     private ArrayList<EquationNode> Terms;//used for the final simplification
-    private final char[] variables;//
-    private final Operator rootOperator;
+    private final char[] Variables;//
+    //private final Operator RootOperator;
     private final String inputExpression;
-    private final String reformattedExpression;
+    private final String ReformattedExpression;
 
     public Expression(String expression) throws InputException{
         inputExpression = expression;
         ExpressionSanitizer expressionSanitizer = new ExpressionSanitizer(expression);
-        reformattedExpression = expressionSanitizer.getReformattedExpression();
-        variables = expressionSanitizer.getVariables();
+        ReformattedExpression = expressionSanitizer.getReformattedExpression();
+        Variables = expressionSanitizer.getVariables();
 
-        ExpressionParser expressionParser = new ExpressionParser(reformattedExpression, variables);
+        //RootOperator = ExpressionParser.parse(ReformattedExpression,Variables);
     }
 
     public char[] getVariables() {
-        return variables;
+        return Variables;
     }
 
-    public Operator getRootOperator() {
-        return rootOperator;
-    }
+   // public Operator getRootOperator() {
+    //j    return RootOperator;
+    //}
 
     public String getInputExpression() {
         return inputExpression;
     }
 
     public String getReformattedExpression() {
-        return reformattedExpression;
+        return ReformattedExpression;
     }
 
 

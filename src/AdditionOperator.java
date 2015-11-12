@@ -20,7 +20,7 @@ public class AdditionOperator extends Operator {
     @Override
     public ArrayList<EquationNode> evaluate() {
         if(Terms == null) {
-            MathOperations.additionControl(Terms);
+//            MathOperations.additionControl(Terms);
         }
         return Terms;
     }

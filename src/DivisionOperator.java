@@ -23,7 +23,7 @@ public class DivisionOperator extends Operator {
     @Override
     public ArrayList<EquationNode> evaluate() {
         if(Terms == null) {
-            MathOperations.divisionControl(Terms);
+//            MathOperations.divisionControl(Terms);
         }
         return Terms;
     }

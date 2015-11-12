@@ -37,11 +37,11 @@ public class ExpressionSanitizer {
      *
      * @param input the string to be tested
      */
-    public static void isEquation(String input) throws InputException {
+    public void isEquation(String input) throws InputException {
         if (!(input.length() >= 3)) { //to short
             throw new InputException(ERROR_PREFIX + "Too Short to be considered an expression");
         }
-        if (!(input.contains("+") || input.contains("*") || input.contains("/") || input.contains("^"))) {
+        if (!(input.contains("+") || input.contains("*") || input.contains("/") || input.contains("^") || input.contains("("))) {
             throw new InputException(ERROR_PREFIX + "Does not contain an operator");
         }
 
@@ -72,10 +72,15 @@ public class ExpressionSanitizer {
         //good syntax if no errors are thrown.
     }
 
-    public static char[] extractVariables(String input){
-        Pattern p = Pattern.compile("[a-z]");
+    public char[] extractVariables(String input){
+        Pattern p = Pattern.compile("[a-z]*");
         Matcher m = p.matcher(input);
-        return m.group().replace("p","").replace("i","").replace("e","").toCharArray();
+        String output = "";
+        while(m.find()) {
+            output += m.group();
+        }
+        return output.replace("p","").replace("i","").replace("e","").toCharArray();
+
     }
 
     /**
@@ -84,7 +89,7 @@ public class ExpressionSanitizer {
      *
      * @param input the string to be tested
      */
-    public static void parenthesisCheck(String input) throws InputException {
+    public void parenthesisCheck(String input) throws InputException {
         int openCount = 0;
         int closedCount = 0;
         for (int indx = 0; indx < input.length(); indx++) {
@@ -106,7 +111,7 @@ public class ExpressionSanitizer {
      * @param input the string to reformat so that the parser can easily parse it
      * @return returns the "fixed"  string
      */
-    public static String reformatInput(String input) {
+    public String reformatInput(String input) {
 
         input = input.replace(" ", "");//Getting rid of spaces
 
@@ -126,19 +131,25 @@ public class ExpressionSanitizer {
 
         input = input.replace("++-", "+-");//for the longest time I didn't spot this. I assumed that everyone would put in -, and not +-
 
-//        input = inferVairableMultiplication(input);//replaces the lines below-- acomidates mutliple variables
-        //input = input.replace(ExpressionParser.variable + "(", ExpressionParser.variable + "*("); //for situations like: x(x+3).  before the fix, that would not work
-        //input = input.replace(")" + ExpressionParser.variable, ")*" + ExpressionParser.variable); //same as above
-
         if (input.startsWith("+-"))
             input = input.substring(1);//can't start with a +. Happens because of above replacements
 
         return input;
     }
 
-    public static String inferMultiplication(String input) {
+    public String inferMultiplication(String input) {
         String result = "";
-        Pattern p = Pattern.compile("[(0-9)]");
+        String pattern = "[0-9pie";
+        for(char c: getVariables()){
+            pattern+=c;
+        }
+        pattern+="]";
+
+
+        //for(char c: getVariables()){
+
+        //}
+        Pattern p = Pattern.compile(pattern);
         for (int i = 0; i + 1 < input.length(); i++) {
             result += input.charAt(i);
             if ((p.matcher(input.charAt(i) + "").find() && input.charAt(i + 1) == '(') ||
