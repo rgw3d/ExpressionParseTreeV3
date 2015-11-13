@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * Created by rgw3d on 11/5/2015.
  */
 public class Term extends NumberStructure {
-    private final NumberStructure Coefficient;
+    private final ArrayList<NumberStructure> Coefficient;
     private final ArrayList<Variable> Variables;
     private final NumberStructure Imagine;
 
@@ -23,19 +23,21 @@ public class Term extends NumberStructure {
             components.add(getNumberStructure(component));
         }
 
-        NumberStructure tempCoefficient = Number.ONE;
+        ArrayList<NumberStructure> tempCoefficients = new ArrayList<NumberStructure>();
+        Number tempCoefficient = Number.ONE;
         ArrayList<Variable> tempVariables = new ArrayList<Variable>();
+        tempVariables.add(Variable.ZERO);
         NumberStructure tempImagine = Imaginary.ZERO;
 
         for(NumberStructure comp : components){
             if(comp instanceof Number){
-                tempCoefficient = Number.multiply(comp,tempCoefficient);
+                tempCoefficient = Number.multiply(tempCoefficient,(Number)comp);
             }
             else if(comp instanceof Variable){
-                Variable.multiply(comp,tempVariables);
+                Variable.multiply(tempVariables, comp);
             }
             else{
-                Imagine = Imaginary.multiply(comp,Imagine);
+                Imagine = Imaginary.multiply(Imagine, comp);
             }
 
         }

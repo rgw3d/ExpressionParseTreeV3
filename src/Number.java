@@ -9,8 +9,8 @@ import java.util.Arrays;
 public class Number extends NumberStructure {
 
     private final double Coefficient;
-    private final double PICount;
-    private final double eCount;
+    private final double PIExponent;
+    private final double eExponent;
 
     public static final Number ZERO = new Number(0);
     public static final Number ONE = new Number(1);
@@ -23,8 +23,8 @@ public class Number extends NumberStructure {
      */
     public Number(){
         Coefficient =0;
-        PICount = 0;
-        eCount = 0;
+        PIExponent =1;
+        eExponent = 1;
     }
 
     /**
@@ -33,31 +33,67 @@ public class Number extends NumberStructure {
      */
     public Number(double num){
         Coefficient = num;
-        PICount = 0;
-        eCount = 0;
+        PIExponent = 1;
+        eExponent = 1;
     }
 
     public Number(double num, double pi, double e){
         Coefficient = num;
-        PICount = pi;
-        eCount = e;
+        PIExponent = pi;
+        eExponent = e;
     }
 
-    public Number(String special){
-        int coefficient = (special.contains("-"))?(-1):(1);
-        if (special.contains("pi")) {
-            PICount = coefficient;
-            eCount = 0;
-            Coefficient = 0;
-        } else if (special.contains("e")) {
-            PICount = 0;
-            eCount = coefficient;
-            Coefficient = 0;
-        } else {
-            PICount = 0;
-            eCount = 0;
-            Coefficient = coefficient * Double.parseDouble(special);
+    /**
+     * Should only be used from the Term parser/constructor
+     * Otherwise, results are unknown
+     * @param input number/pi/e from Term constructor
+     */
+    public Number(String input){
+        int coefficient;
+        if(input.startsWith("-")){
+            coefficient = -1;
+            input = input.substring(1);//remove -
         }
+        else
+            coefficient = 1;
+
+
+        if (input.contains("pi")) {
+            PIExponent = input.length()/2;
+            eExponent = 0;
+            Coefficient = coefficient;
+        } else if (input.contains("e")) {
+            PIExponent = 0;
+            eExponent = input.length();
+            Coefficient = coefficient;
+        } else {
+            PIExponent = 0;
+            eExponent = 0;
+            Coefficient = coefficient * Double.parseDouble(input);
+        }
+    }
+
+    public static void multiply(ArrayList<NumberStructure> list, Number toMultiply){
+        //TODO implement
+    }
+
+    public static Number multiply(Number n1, Number n2){
+        double num = n1.getCoefficient() * n2.getCoefficient();
+        double piExp = n1.getPIExponent() + n2.getPIExponent();
+        double eExp = n1.geteExponent() + n2.geteExponent();
+        return new Number(num, piExp, eExp);
+    }
+
+    public double getCoefficient() {
+        return Coefficient;
+    }
+
+    public double getPIExponent() {
+        return PIExponent;
+    }
+
+    public double geteExponent() {
+        return eExponent;
     }
 
     @Override

@@ -12,6 +12,8 @@ public class Variable extends NumberStructure{
     private final NumberStructure Exponent;
     public static final ArrayList<Variable> DEFAULT_VARIABLE_LIST = new ArrayList<Variable>(Arrays.asList(new Variable(Number.ONE, 'x', Number.ZERO)));
 
+    public static final Variable ZERO = new Variable(Number.ONE,'x',Number.ZERO);
+
     @Override
     public String toString() {
         return Variable + "^"+ Exponent.toString();
