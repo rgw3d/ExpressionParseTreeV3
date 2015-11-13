@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class Term extends NumberStructure {
     private final ArrayList<NumberStructure> Coefficient;
     private final ArrayList<Variable> Variables;
-    private final NumberStructure Imagine;
+    private final Imaginary Imagine;
 
     public Term(String expression){
         ArrayList<NumberStructure> components = new ArrayList<NumberStructure>();
@@ -26,23 +26,22 @@ public class Term extends NumberStructure {
         ArrayList<NumberStructure> tempCoefficients = new ArrayList<NumberStructure>();
         Number tempCoefficient = Number.ONE;
         ArrayList<Variable> tempVariables = new ArrayList<Variable>();
-        tempVariables.add(Variable.ZERO);
-        NumberStructure tempImagine = Imaginary.ZERO;
+        Imaginary tempImagine = Imaginary.ZERO;
 
         for(NumberStructure comp : components){
             if(comp instanceof Number){
                 tempCoefficient = Number.multiply(tempCoefficient,(Number)comp);
             }
             else if(comp instanceof Variable){
-                Variable.multiply(tempVariables, comp);
+                Variable.multiply(tempVariables, (Variable)comp);
             }
             else{
-                Imagine = Imaginary.multiply(Imagine, comp);
+                tempImagine = Imaginary.multiply(tempImagine, (Imaginary)comp);
             }
 
         }
 
-        Coefficient = tempCoefficient;
+        Coefficient = new ArrayList<NumberStructure>(Arrays.asList(tempCoefficient));
         Variables = tempVariables;
         Imagine = tempImagine;
 
@@ -94,11 +93,11 @@ public class Term extends NumberStructure {
     }
 
 
-    public Term(NumberStructure coef, ArrayList<Variable> var, NumberStructure img){
+    public Term(ArrayList<NumberStructure> coef, ArrayList<Variable> var, Imaginary img){
         if(coef == null)
-            coef = Number.ONE;
+            coef = new ArrayList<NumberStructure>(Arrays.asList(Number.ONE));
         if(var == null)
-            var = Variable.DEFAULT_VARIABLE_LIST;
+            var = new ArrayList<Variable>();
         if(img == null)
             img = Imaginary.ZERO;
 
@@ -108,16 +107,14 @@ public class Term extends NumberStructure {
     }
 
     /**
-     * gets the number value for the Simplifier.ExpressionNode
      *
      * @return double number value
      */
-    public NumberStructure getCoefficient() {
+    public ArrayList<NumberStructure> getCoefficient() {
         return Coefficient;
     }
 
     /**
-     * gets the variable value for the Simplifier.ExpressionNode
      *
      * @return double Var value
      */

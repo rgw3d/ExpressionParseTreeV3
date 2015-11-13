@@ -84,6 +84,15 @@ public class Number extends NumberStructure {
         return new Number(num, piExp, eExp);
     }
 
+    public static NumberStructure add(Number n1, Number n2){
+        if(n1.geteExponent() == n2.geteExponent() && n1.geteExponent() == n2.getPIExponent()){
+            return new Number(n1.getCoefficient() + n2.getCoefficient(), n1.getPIExponent(), n2.geteExponent());
+        }
+        else {
+            return new Term(new ArrayList<NumberStructure>(Arrays.asList(n1,n2)), null, null);
+        }
+    }
+
     public double getCoefficient() {
         return Coefficient;
     }
@@ -118,10 +127,10 @@ public class Number extends NumberStructure {
         if(Coefficient == 0)
             return 0+"";
         String string = "";
-        if(PICount != 0)
-            string += "("+PICount+"pi)";
-        if(eCount != 0)
-            string += "("+eCount+"e)";
+        if(PIExponent != 0)
+            string += "(pi^"+PIExponent+")";
+        if(eExponent!= 0)
+            string += "(e^"+eExponent+")";
         if(Coefficient != 1 || string.length() == 0)
             string = Coefficient + string;
         return string;

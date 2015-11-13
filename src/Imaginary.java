@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 public class Imaginary extends NumberStructure {
 
-    private final NumberStructure Coefficient;
+    private final Number Coefficient;
     private final NumberStructure Exponent;
 
     public static final Imaginary ZERO = new Imaginary(Number.ONE, Number.ZERO);
@@ -23,7 +23,7 @@ public class Imaginary extends NumberStructure {
 
         Exponent = new Number(input.length());
     }
-    public Imaginary(NumberStructure coefficient, NumberStructure exponent){
+    public Imaginary(Number coefficient, NumberStructure exponent){
         if (coefficient == null)
             coefficient = Number.ONE;
         if (exponent == null)
@@ -33,7 +33,13 @@ public class Imaginary extends NumberStructure {
 
     }
 
-    public NumberStructure getCoefficient() {
+    public static Imaginary multiply(Imaginary i1, Imaginary i2){
+        Number coef = Number.multiply(i1.getCoefficient(), i2.getCoefficient());
+        NumberStructure exp = Number.add((Number) i1.getExponent(), (Number) i2.getExponent());
+        return new Imaginary(coef, exp);
+    }
+
+    public Number getCoefficient() {
         return Coefficient;
     }
 

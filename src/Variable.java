@@ -7,10 +7,9 @@ import java.util.Arrays;
  */
 public class Variable extends NumberStructure{
 
-    private final NumberStructure Coefficient;
+    private final Number Coefficient;
     private final char Variable;
     private final NumberStructure Exponent;
-    public static final ArrayList<Variable> DEFAULT_VARIABLE_LIST = new ArrayList<Variable>(Arrays.asList(new Variable(Number.ONE, 'x', Number.ZERO)));
 
     public static final Variable ZERO = new Variable(Number.ONE,'x',Number.ZERO);
 
@@ -35,7 +34,7 @@ public class Variable extends NumberStructure{
         Exponent = new Number(input.length());
     }
 
-    public Variable(NumberStructure coefficient, char variable, NumberStructure exponent){
+    public Variable(Number coefficient, char variable, NumberStructure exponent){
         if(coefficient == null)
             this.Coefficient = Number.ONE;
         else
@@ -47,6 +46,31 @@ public class Variable extends NumberStructure{
             this.Exponent = Number.ONE;
         else
             this.Exponent = exponent;
+    }
+
+    public Number getCoefficient() {
+        return Coefficient;
+    }
+
+    public char getVariable() {
+        return Variable;
+    }
+
+    public NumberStructure getExponent() {
+        return Exponent;
+    }
+
+    public static void multiply(ArrayList<Variable> list, Variable var){
+        for(Variable component: list){
+            if(var.getVariable() == component.getVariable()){ //same variable
+                Number coef = Number.multiply(var.getCoefficient(), component.getCoefficient());//get multiplied coefficient
+                NumberStructure exp = Number.add((Number)var.getExponent(), (Number)component.getExponent());//TODO implement addition of everything
+                list.remove(component);
+                list.add(new Variable(coef, var.getVariable(), exp)); //add new variable
+                return;
+            }
+        }
+        list.add(var);
     }
 
     /**
