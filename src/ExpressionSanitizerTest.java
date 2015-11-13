@@ -16,7 +16,7 @@ public class ExpressionSanitizerTest extends TestCase {
 
         for (int i = 0; i < testInputs.length; i++) {
             ExpressionSanitizer es = new ExpressionSanitizer(testInputs[i]);
-            System.out.println("@Test inferMultiplication(): " + testInputs[i] + " = " + es.getReformattedExpression());
+            System.out.println("@Test inferParenthesisMultiplication(): " + testInputs[i] + " = " + es.getReformattedExpression());
             assertEquals(outputs[i], es.getReformattedExpression());
         }
 

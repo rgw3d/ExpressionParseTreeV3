@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -9,6 +11,86 @@ public class Term extends NumberStructure {
     private final NumberStructure Coefficient;
     private final ArrayList<Variable> Variables;
     private final NumberStructure Imagine;
+
+    public Term(String expression){
+        ArrayList<NumberStructure> components = new ArrayList<NumberStructure>();
+
+        //I get a string with no operators, just implied multiplication
+        //so, I need to go through the string, and parse negative numbers, numbers, pi, e, and other variables
+        for (int i = 0; i < expression.length(); i++) {
+            String component = getComponent(expression, i);
+            i+=component.length()-1;
+            components.add(getNumberStructure(component));
+        }
+
+        NumberStructure tempCoefficient = Number.ONE;
+        ArrayList<Variable> tempVariables = new ArrayList<Variable>();
+        NumberStructure tempImagine = Imaginary.ZERO;
+
+        for(NumberStructure comp : components){
+            if(comp instanceof Number){
+                tempCoefficient = Number.multiply(comp,tempCoefficient);
+            }
+            else if(comp instanceof Variable){
+                Variable.multiply(comp,tempVariables);
+            }
+            else{
+                Imagine = Imaginary.multiply(comp,Imagine);
+            }
+
+        }
+
+        Coefficient = tempCoefficient;
+        Variables = tempVariables;
+        Imagine = tempImagine;
+
+
+    }
+
+    private String getComponent(String expression, int index){
+        String component = "";
+        if(expression.charAt(index) == '-') {
+            component += "-";
+            index++;
+        }
+        component+=expression.charAt(index++);
+
+        for (; index < expression.length(); index++) {
+            char charPre = expression.charAt(index-1);
+
+            if(charPre == 'e' || charPre == 'i')//account for e and i
+                break;
+            else if(charPre == 'p'){// account for pi
+                component+='i';
+                break;
+            }
+            char charAt = expression.charAt(index);
+            boolean charPreIsLetter = Character.isLetter(charPre);
+            boolean charAtIsLetter = Character.isLetter(charAt);
+
+            if(charPreIsLetter && !charAtIsLetter) //variable to number
+                break;
+            else if(!charPreIsLetter && charAtIsLetter && charAt != '.') //number to variable
+                break;
+            else if(charPreIsLetter && charAtIsLetter && charPre != charAt) //different variable (different letter)
+                break;
+
+            component += charAt;
+        }
+        return component;
+    }
+
+    private NumberStructure getNumberStructure(String part){
+        Pattern pattern = Pattern.compile("[0-9]");
+        Matcher matcher = pattern.matcher(part);
+        if(part.contains("pi") || part.contains("e") || matcher.find())
+            return new Number(part);
+        else if(part.contains("i"))
+            return new Imaginary(part);
+        else
+            return new Variable(part);
+    }
+
 
     public Term(NumberStructure coef, ArrayList<Variable> var, NumberStructure img){
         if(coef == null)

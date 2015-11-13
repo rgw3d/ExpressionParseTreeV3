@@ -44,18 +44,19 @@ public class Number extends NumberStructure {
     }
 
     public Number(String special){
-        if (special.equalsIgnoreCase("pi")) {
-            PICount = 1;
+        int coefficient = (special.contains("-"))?(-1):(1);
+        if (special.contains("pi")) {
+            PICount = coefficient;
             eCount = 0;
             Coefficient = 0;
-        } else if (special.equalsIgnoreCase("e")) {
+        } else if (special.contains("e")) {
             PICount = 0;
-            eCount = 1;
+            eCount = coefficient;
             Coefficient = 0;
         } else {
             PICount = 0;
             eCount = 0;
-            Coefficient = Double.parseDouble(special);
+            Coefficient = coefficient * Double.parseDouble(special);
         }
     }
 

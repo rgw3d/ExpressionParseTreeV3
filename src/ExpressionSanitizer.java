@@ -67,6 +67,11 @@ public class ExpressionSanitizer {
             throw new InputException(ERROR_PREFIX + "Two or more of an operator: " + m.group());
         }
 
+        if(input.contains("p") && !input.contains("i")){
+            throw new InputException(ERROR_PREFIX + "\"p\" cannot be used as a variable");
+        }
+
+
         parenthesisCheck(input);
 
         //good syntax if no errors are thrown.
@@ -127,7 +132,7 @@ public class ExpressionSanitizer {
 
         input = input.replace(")(", ")*(");//multiply by parenthesis
 
-        input = inferMultiplication(input);//for situations like this:  3(x+1) or (x^2-1)33, where there are parentheses and numbers touching
+        input = inferParenthesisMultiplication(input);//for situations like this:  3(x+1) or (x^2-1)33, where there are parentheses, variables or numbers touching
 
         input = input.replace("++-", "+-");//for the longest time I didn't spot this. I assumed that everyone would put in -, and not +-
 
@@ -137,7 +142,7 @@ public class ExpressionSanitizer {
         return input;
     }
 
-    public String inferMultiplication(String input) {
+    public String inferParenthesisMultiplication(String input) {
         String result = "";
         String pattern = "[0-9pie";
         for(char c: getVariables()){

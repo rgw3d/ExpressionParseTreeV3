@@ -17,6 +17,22 @@ public class Variable extends NumberStructure{
         return Variable + "^"+ Exponent.toString();
     }
 
+    /**
+     * Constructor called from Term, when Term is parsing input. If used otherwise, results are unexpected
+     * @param input input string
+     */
+    public Variable(String input){
+        if(input.startsWith("-")) {
+            Coefficient = new Number(-1);
+            input = input.substring(1);
+        }
+        else
+            Coefficient = Number.ONE;
+
+        Variable = input.charAt(0);//variable should be the first one
+        Exponent = new Number(input.length());
+    }
+
     public Variable(NumberStructure coefficient, char variable, NumberStructure exponent){
         if(coefficient == null)
             this.Coefficient = Number.ONE;

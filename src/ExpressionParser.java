@@ -38,12 +38,8 @@ public class ExpressionParser {
         //did not find an operator
         if(hasParenthesis)
             return parseEquation(expression.substring(1,expression.length()-1));
-        else{
-            
-        }
-            
-
-        return new Operator('+',Number.ONE,Number.ONE);
+        else
+            return new Term(expression,Variables);
     }
 
     /**
@@ -72,39 +68,5 @@ public class ExpressionParser {
         throw new InputException("Parsing Failed - Missing Parenthesis Pair");
     }
 
-    /**
-     * Used to parse Numbers
-     */
-    public class ParseNumber {
-        private double constantCount = 0;
-        private double varExponent = 0;
-        private String input;
-
-        /**
-         * @param input the string to be parsed
-         */
-        public ParseNumber(String input) {
-            this.input = input;
-            parseInput();
-        }
-
-        /**
-         * Parses and then stores the values of the input string
-         */
-        private void parseInput() {
-            if (input.contains(variable))//if there is a x in it
-                varExponent = 1;
-
-            if (input.equals(variable) || input.equals("-"+variable))// if it just a "x"
-                input = input.replace(variable, "1"+variable);
-
-            if (input.equals("-"))//another special case where it sends just a negative
-                input = input.replace("-", "-1");
-
-            input = input.replace(variable, "");
-            constantCount = Double.parseDouble(input);
-
-        }
-    }
 }
 

@@ -10,9 +10,19 @@ public class Imaginary extends NumberStructure {
     private final NumberStructure Coefficient;
     private final NumberStructure Exponent;
 
-    public static final Imaginary ZERO = new Imaginary(Number.ZERO, Number.ONE);
+    public static final Imaginary ZERO = new Imaginary(Number.ONE, Number.ZERO);
     public static final Imaginary ONE = new Imaginary(Number.ONE, Number.ONE);
 
+    public Imaginary(String input){
+        if(input.startsWith("-")) {
+            Coefficient = new Number(-1);
+            input = input.substring(1);
+        }
+        else
+            Coefficient = Number.ONE;
+
+        Exponent = new Number(input.length());
+    }
     public Imaginary(NumberStructure coefficient, NumberStructure exponent){
         if (coefficient == null)
             coefficient = Number.ONE;
