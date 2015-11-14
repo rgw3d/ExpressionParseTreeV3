@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * Wrapper Object to all of the math operations and parsing
  * Created by rgw3d on 11/5/2015.
  */
-public class Expression {
+public class Expression implements ExpressionNode{
     private ArrayList<ExpressionNode> Terms;//used for the final simplification
     private final char[] Variables;//
     private final ExpressionNode RootOperator;
@@ -17,7 +17,7 @@ public class Expression {
         ReformattedExpression = expressionSanitizer.getReformattedExpression();
         Variables = expressionSanitizer.getVariables();
 
-        ExpressionParser expressionParser = new ExpressionParser(ReformattedExpression,Variables);
+        ExpressionParser expressionParser = new ExpressionParser(ReformattedExpression);
         RootOperator = expressionParser.parseEquation();
     }
 
@@ -38,5 +38,13 @@ public class Expression {
     }
 
 
-
+    /**
+     * Get the list of simplified terms,
+     *
+     * @return simplified list of operation in Nominals and Fractions
+     */
+    @Override
+    public ArrayList<ExpressionNode> simplify() {
+        return RootOperator.simplify();
+    }
 }

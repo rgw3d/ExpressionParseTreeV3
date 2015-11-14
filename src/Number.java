@@ -33,8 +33,8 @@ public class Number extends NumberStructure {
      */
     public Number(double num){
         Coefficient = num;
-        PIExponent = 1;
-        eExponent = 1;
+        PIExponent = 0;
+        eExponent = 0;
     }
 
     public Number(double num, double pi, double e){
@@ -112,7 +112,9 @@ public class Number extends NumberStructure {
 
         Number number = (Number) o;
 
-        return Double.compare(number.Coefficient, Coefficient) == 0;
+        if (Double.compare(number.getCoefficient(), getCoefficient()) != 0) return false;
+        if (Double.compare(number.getPIExponent(), getPIExponent()) != 0) return false;
+        return Double.compare(number.geteExponent(), geteExponent()) == 0;
 
     }
 
@@ -142,7 +144,7 @@ public class Number extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<ExpressionNode> evaluate() {
+    public ArrayList<ExpressionNode> simplify() {
         return new ArrayList<ExpressionNode>(Arrays.asList(this));
     }
 }

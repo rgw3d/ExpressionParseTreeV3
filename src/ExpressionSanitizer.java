@@ -130,6 +130,8 @@ public class ExpressionSanitizer {
 
         input = input.replace("(+-", "(-"); //common error that happens if multiplying by a negative
 
+        input = input.replace("-(", "-1*("); //error when subtracting parenthesis
+
         input = input.replace(")(", ")*(");//multiply by parenthesis
 
         input = inferParenthesisMultiplication(input);//for situations like this:  3(x+1) or (x^2-1)33, where there are parentheses, variables or numbers touching

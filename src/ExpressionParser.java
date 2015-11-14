@@ -3,24 +3,24 @@
  * Created by rgw3d on 10/9/2014.
  */
 public class ExpressionParser {
-
     private final String Input;
-    private final char[] Variables;
 
-    public ExpressionParser(String input,char[] vairables ) {
+    public ExpressionParser(String input ) {
         Input = input;
-        Variables = vairables;
     }
 
     public ExpressionNode parseEquation() throws InputException {
         return parseEquation(Input);
     }
 
-    public ExpressionNode parseEquation(String expression) throws InputException {
+    private ExpressionNode parseEquation(String expression) throws InputException {
         char[] operations = new char[]{'+','*','/','^'};
 
         boolean hasParenthesis = false;
         for(char op : operations){
+            if(!expression.contains(op+"")){//just skip this iteration if there is not this operator
+                continue;
+            }
             for (int i = 0; i < expression.length() ; i++) {
                 char charAt = expression.charAt(i);
                 if(charAt == '('){
@@ -36,10 +36,12 @@ public class ExpressionParser {
             }
         }
         //did not find an operator
-        if(hasParenthesis)
-            return parseEquation(expression.substring(1,expression.length()-1));
+        if(hasParenthesis) {
+            //if(expression.startsWith("-"))
+            return parseEquation(expression.substring(1, expression.length() - 1));
+        }
         else
-            return new Term(expression,Variables);
+            return new Term(expression);
     }
 
     /**
@@ -53,7 +55,7 @@ public class ExpressionParser {
     private int skipParen(String input, int indx) throws InputException {
         int openCount = 1;
         int closedCount = 0;
-        while (indx > 0) {
+        while (indx < input.length()) {
             indx++;
             if ((input.charAt(indx) + "").equals(")"))
                 closedCount++;//increment closed count

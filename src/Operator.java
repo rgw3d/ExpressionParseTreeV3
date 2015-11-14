@@ -25,11 +25,11 @@ public class Operator implements ExpressionNode {
 
     @Override
     public String toString() {
-        return Node1.toString()+Type+ Node2.toString();
+        return "("+Node1.toString()+Type+ Node2.toString()+")";
     }
 
     @Override
-    public ArrayList<ExpressionNode> evaluate(){
+    public ArrayList<ExpressionNode> simplify(){
         if(Terms == null) {
 //            MathOperations.additionControl(Terms);
         }

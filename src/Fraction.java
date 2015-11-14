@@ -48,7 +48,7 @@ public class Fraction extends NumberStructure {
      * @return ArrayList of top
      */
     @Override
-    public ArrayList<ExpressionNode> evaluate() {
+    public ArrayList<ExpressionNode> simplify() {
         return new ArrayList<ExpressionNode>(Arrays.asList(this));
     }
 

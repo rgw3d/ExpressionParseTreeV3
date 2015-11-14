@@ -27,7 +27,7 @@ public class Imaginary extends NumberStructure {
         if (coefficient == null)
             coefficient = Number.ONE;
         if (exponent == null)
-            exponent = Number.ONE;
+            exponent = Number.ZERO;
         Coefficient = coefficient;
         Exponent = exponent;
 
@@ -53,11 +53,21 @@ public class Imaginary extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<ExpressionNode> evaluate() {
+    public ArrayList<ExpressionNode> simplify() {
         return new ArrayList<ExpressionNode>(Arrays.asList(this));
     }
 
-
+    @Override
+    public String toString() {
+        if (Number.ZERO.equals(Coefficient))
+            return "i^0";
+        String string = "";
+        if (!Number.ONE.equals(Coefficient))
+            string += Coefficient;
+        if (!Exponent.equals(Number.ZERO)) //TODO figure ot how to make NumberStructre.equals() a thing
+            string += "i^(" + Exponent + ")";
+        return string;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

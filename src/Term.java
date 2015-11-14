@@ -132,10 +132,42 @@ public class Term extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<ExpressionNode> evaluate() {
+    public ArrayList<ExpressionNode> simplify() {
         return new ArrayList<ExpressionNode>(Arrays.asList(this));
     }
 
+    @Override
+    public String toString() {
+        String toReturn = "";
+
+        if(Coefficient.size() == 1 && Coefficient.get(0) instanceof Number ){
+            if(!Coefficient.get(0).equals(Number.ONE))
+                toReturn+="("+Coefficient.get(0).toString()+")";
+        }
+        else {
+            toReturn += "(";
+            for(NumberStructure numberStructure: Coefficient){
+                toReturn += numberStructure+"+";
+            }
+            toReturn = toReturn.substring(0,toReturn.length()-1) + ")";
+        }
+
+        if(Variables.size() != 0){
+            toReturn +="(";
+            for(Variable var: Variables){
+                toReturn += var;
+            }
+            toReturn+=")";
+        }
+
+        if(!Imagine.equals(Imaginary.ZERO)){
+            toReturn += "("+Imagine +")";
+        }
+
+        if(toReturn.length() == 0)
+            toReturn = "1";
+        return toReturn;
+    }
 
     @Override
     public boolean equals(Object o) {

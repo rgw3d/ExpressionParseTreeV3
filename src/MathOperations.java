@@ -15,8 +15,8 @@ public class MathOperations {
     public static void additionControl(ArrayList<ExpressionNode> terms){
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
-        ArrayList<ExpressionNode> allTerms = terms.get(0).evaluate();
-        allTerms.addAll(terms.get(1).evaluate());
+        ArrayList<ExpressionNode> allTerms = terms.get(0).simplify();
+        allTerms.addAll(terms.get(1).simplify());
         if(sameVariablePower(allTerms)){
             terms.clear();
             terms.add(variableIndependentAddition(allTerms));
@@ -191,7 +191,7 @@ public class MathOperations {
             terms.add(product);
         }
         else {
-            ArrayList<ExpressionNode> products = multiplyLists(terms.get(0).evaluate(), terms.get(1).evaluate());
+            ArrayList<ExpressionNode> products = multiplyLists(terms.get(0).simplify(), terms.get(1).simplify());
             terms.clear();
             terms.addAll(complexAdditionControl(products));
         }
@@ -274,7 +274,7 @@ public class MathOperations {
     public static void divisionControl(ArrayList<ExpressionNode> terms) {
         if(terms.size()!=2)
             throw new IndexOutOfBoundsException("Terms had a size that was not 2: " +terms.size());
-        NumberStructure fraction = new NumberStructure.Fraction(terms.get(0).evaluate(), terms.get(1).evaluate());
+        NumberStructure fraction = new NumberStructure.Fraction(terms.get(0).simplify(), terms.get(1).simplify());
         fraction = simplifyFractions(fraction);
         terms.clear();
         terms.add(fraction);
@@ -512,12 +512,12 @@ public class MathOperations {
         }
         else{//special case. base is nominal.  exponent is real number without variables. but it could be something like 2.2 or 22/10
             if(terms.get(0) instanceof NumberStructure.Number
-                    && terms.get(1).evaluate().size() == 1
-                    && terms.get(1).evaluate().get(0) instanceof NumberStructure
-                    && terms.get(1).evaluate().get(0).getTop().size() == 1
-                    && terms.get(1).evaluate().get(0).getBottom().size() == 1
-                    && terms.get(1).evaluate().get(0).getTop().get(0).getVar() == 0
-                    && terms.get(1).evaluate().get(0).getBottom().get(0).getVar() == 0)
+                    && terms.get(1).simplify().size() == 1
+                    && terms.get(1).simplify().get(0) instanceof NumberStructure
+                    && terms.get(1).simplify().get(0).getTop().size() == 1
+                    && terms.get(1).simplify().get(0).getBottom().size() == 1
+                    && terms.get(1).simplify().get(0).getTop().get(0).getVar() == 0
+                    && terms.get(1).simplify().get(0).getBottom().get(0).getVar() == 0)
                 baseIsNominal(terms);
             else {
             PowerOperator powerOperator = new PowerOperator(terms);
@@ -534,14 +534,14 @@ public class MathOperations {
      * @param terms the base and the exponent to simplify
      */
     private static void baseIsOperator(ArrayList<ExpressionNode> terms) {
-        int expnt = (int) terms.get(1).evaluate().get(0).getTop().get(0).getCoef();
+        int expnt = (int) terms.get(1).simplify().get(0).getTop().get(0).getCoef();
         //get exponent.  will be cast to an int.
         if(expnt == 0) {
             terms.clear();
             terms.add(NumberStructure.Number.One);
         }
         else if(expnt <0){//negative exponent
-            NumberStructure.Fraction flipped = new NumberStructure.Fraction(terms.get(0).evaluate());
+            NumberStructure.Fraction flipped = new NumberStructure.Fraction(terms.get(0).simplify());
             expnt = Math.abs(expnt);
 
             if(expnt-1==0){//not multiplied.  exponent of 1
@@ -570,7 +570,7 @@ public class MathOperations {
         else
         {
             if(expnt-1==0){//not multiplied
-                ArrayList<ExpressionNode> simplified = terms.get(0).evaluate();
+                ArrayList<ExpressionNode> simplified = terms.get(0).simplify();
                 terms.clear();
                 terms.addAll(simplified);
             }
@@ -597,13 +597,13 @@ public class MathOperations {
     private static void baseIsNominal(ArrayList<ExpressionNode> terms) {
         if (terms.get(0).getVariable() == 0) {//meaning that there is no variable in the base
             NumberStructure.Number simplified = new NumberStructure.Number(Math.pow(terms.get(0).getCoefficient(),
-                     terms.get(1).evaluate().get(0).getTop().get(0).getCoef()/terms.get(1).evaluate().get(0).getBottom().get(0).getCoef()), 0);
+                     terms.get(1).simplify().get(0).getTop().get(0).getCoef()/terms.get(1).simplify().get(0).getBottom().get(0).getCoef()), 0);
             terms.clear();
             terms.add(simplified);
 
         } else {//with a variable in the base
             NumberStructure.Number simplified = new NumberStructure.Number(terms.get(0).getCoefficient(),
-                    terms.get(0).getVariable() * ( terms.get(1).evaluate().get(0).getTop().get(0).getCoef()/terms.get(1).evaluate().get(0).getBottom().get(0).getCoef()));
+                    terms.get(0).getVariable() * ( terms.get(1).simplify().get(0).getTop().get(0).getCoef()/terms.get(1).simplify().get(0).getBottom().get(0).getCoef()));
             terms.clear();
             terms.add(simplified);
         }
@@ -618,7 +618,7 @@ public class MathOperations {
         if (terms.get(1) instanceof NumberStructure.Number && terms.get(1).getVariable() == 0 && terms.get(1).getCoefficient()==(int)terms.get(1).getCoefficient()) {
             return true;
         } else {
-            ArrayList<ExpressionNode> list = terms.get(1).evaluate();//get the list for the exponent
+            ArrayList<ExpressionNode> list = terms.get(1).simplify();//get the list for the exponent
             if (list.size() == 1 && list.get(0) instanceof NumberStructure.Number && list.get(0).getVariable() == 0) {
                 return true;//if it simplifies to a nominal without a variable
             } else if (list.size() == 1 && list.get(0) instanceof NumberStructure.Fraction) {
