@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,8 +9,8 @@ import java.util.regex.Pattern;
  * Created by rgw3d on 11/5/2015.
  */
 public class Term extends NumberStructure {
-    private final ArrayList<NumberStructure> Coefficient;
-    private final ArrayList<Variable> Variables;
+    private final HashSet<NumberStructure> Coefficient;
+    private final HashSet<Variable> Variables;
     private final Imaginary Imagine;
 
     public Term(String expression){
@@ -23,9 +24,8 @@ public class Term extends NumberStructure {
             components.add(getNumberStructure(component));
         }
 
-        ArrayList<NumberStructure> tempCoefficients = new ArrayList<NumberStructure>();
         Number tempCoefficient = Number.ONE;
-        ArrayList<Variable> tempVariables = new ArrayList<Variable>();
+        HashSet<Variable> tempVariables = new HashSet<Variable>();
         Imaginary tempImagine = Imaginary.ZERO;
 
         for(NumberStructure comp : components){
@@ -41,7 +41,7 @@ public class Term extends NumberStructure {
 
         }
 
-        Coefficient = new ArrayList<NumberStructure>(Arrays.asList(tempCoefficient));
+        Coefficient = new HashSet<NumberStructure>(Arrays.asList(tempCoefficient));
         Variables = tempVariables;
         Imagine = tempImagine;
 
@@ -93,11 +93,11 @@ public class Term extends NumberStructure {
     }
 
 
-    public Term(ArrayList<NumberStructure> coef, ArrayList<Variable> var, Imaginary img){
+    public Term(HashSet<NumberStructure> coef, HashSet<Variable> var, Imaginary img){
         if(coef == null)
-            coef = new ArrayList<NumberStructure>(Arrays.asList(Number.ONE));
+            coef = new HashSet<NumberStructure>(Arrays.asList(Number.ONE));
         if(var == null)
-            var = new ArrayList<Variable>();
+            var = new HashSet<Variable>();
         if(img == null)
             img = Imaginary.ZERO;
 
@@ -110,7 +110,7 @@ public class Term extends NumberStructure {
      *
      * @return double number value
      */
-    public ArrayList<NumberStructure> getCoefficient() {
+    public HashSet<NumberStructure> getCoefficient() {
         return Coefficient;
     }
 
@@ -118,7 +118,7 @@ public class Term extends NumberStructure {
      *
      * @return double Var value
      */
-    public ArrayList<Variable> getVariable() {
+    public HashSet<Variable> getVariable() {
         return Variables;
     }
 
@@ -132,17 +132,18 @@ public class Term extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<ExpressionNode> simplify() {
-        return new ArrayList<ExpressionNode>(Arrays.asList(this));
+    public HashSet<ExpressionNode> simplify() {
+        return new HashSet<ExpressionNode>(Arrays.asList(this));
     }
 
     @Override
     public String toString() {
         String toReturn = "";
 
-        if(Coefficient.size() == 1 && Coefficient.get(0) instanceof Number ){
-            if(!Coefficient.get(0).equals(Number.ONE))
-                toReturn+="("+Coefficient.get(0).toString()+")";
+        if(Coefficient.size() == 1 && Coefficient.toArray()[0] instanceof Number ){
+            Number indx = (Number)Coefficient.toArray()[0];
+            if(!indx.equals(Number.ONE))
+                toReturn+="("+indx.toString()+")";
         }
         else {
             toReturn += "(";

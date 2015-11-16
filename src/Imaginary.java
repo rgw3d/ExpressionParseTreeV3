@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  *
@@ -53,8 +54,8 @@ public class Imaginary extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<ExpressionNode> simplify() {
-        return new ArrayList<ExpressionNode>(Arrays.asList(this));
+    public HashSet<ExpressionNode> simplify() {
+        return new HashSet<ExpressionNode>(Arrays.asList(this));
     }
 
     @Override

@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Parent interface to everything in this project
@@ -11,6 +11,6 @@ public interface ExpressionNode {
      * Get the list of simplified terms,
      * @return simplified list of operation in Nominals and Fractions
      */
-    public ArrayList<ExpressionNode> simplify();
+    public HashSet<ExpressionNode> simplify();
 
 }

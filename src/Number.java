@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Simplifier.Number Simplifier.NumberStructure
@@ -89,7 +90,7 @@ public class Number extends NumberStructure {
             return new Number(n1.getCoefficient() + n2.getCoefficient(), n1.getPIExponent(), n2.geteExponent());
         }
         else {
-            return new Term(new ArrayList<NumberStructure>(Arrays.asList(n1,n2)), null, null);
+            return new Term(new HashSet<NumberStructure>(Arrays.asList(n1,n2)), null, null);
         }
     }
 
@@ -144,7 +145,7 @@ public class Number extends NumberStructure {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<ExpressionNode> simplify() {
-        return new ArrayList<ExpressionNode>(Arrays.asList(this));
+    public HashSet<ExpressionNode> simplify() {
+        return new HashSet<ExpressionNode>(Arrays.asList(this));
     }
 }

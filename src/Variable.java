@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  *
@@ -15,7 +16,7 @@ public class Variable extends NumberStructure{
 
     @Override
     public String toString() {
-        return Variable + "^"+ Exponent.toString();
+        return Coefficient +""+ Variable + "^"+ Exponent.toString();
     }
 
     /**
@@ -60,7 +61,7 @@ public class Variable extends NumberStructure{
         return Exponent;
     }
 
-    public static void multiply(ArrayList<Variable> list, Variable var){
+    public static void multiply(HashSet<Variable> list, Variable var){
         for(Variable component: list){
             if(var.getVariable() == component.getVariable()){ //same variable
                 Number coef = Number.multiply(var.getCoefficient(), component.getCoefficient());//get multiplied coefficient
@@ -79,8 +80,8 @@ public class Variable extends NumberStructure{
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public ArrayList<ExpressionNode> simplify() {
-        return new ArrayList<ExpressionNode>(Arrays.asList(this));
+    public HashSet<ExpressionNode> simplify() {
+        return new HashSet<ExpressionNode>(Arrays.asList(this));
     }
 
     @Override

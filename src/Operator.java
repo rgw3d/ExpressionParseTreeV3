@@ -1,12 +1,13 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  *
  * Created by rgw3d on 10/9/2014.
  */
 public class Operator implements ExpressionNode {
-    private ArrayList<ExpressionNode> Terms = null;
+    private HashSet<ExpressionNode> Terms = null;
     private final ExpressionNode Node1;
     private final ExpressionNode Node2;
     private final char Type;
@@ -29,13 +30,22 @@ public class Operator implements ExpressionNode {
     }
 
     @Override
-    public ArrayList<ExpressionNode> simplify(){
+    public HashSet<ExpressionNode> simplify(){
         if(Terms == null) {
-//            MathOperations.additionControl(Terms);
+            switch (Type){
+                case '+':
+                    Terms = MathOperations.add(Node1.simplify(),Node2.simplify());
+                    break;
+                case '*':
+                    Terms = MathOperations.multiply(Node1.simplify(),Node2.simplify());
+                    break;
+                case '/':
+                    Terms = MathOperations.divide(Node1.simplify(),Node2.simplify());
+                    break;
+                case '^':
+                    Terms = MathOperations.power(Node1.simplify(), Node2.simplify());
+            }
         }
-        //else if(Type == '+')
-            //return
-
         return Terms;
     }
 }
