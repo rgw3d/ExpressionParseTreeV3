@@ -6,7 +6,7 @@ import java.util.HashSet;
  *
  * Created by rgw3d on 11/6/2015.
  */
-public class Imaginary extends NumberStructure {
+public class Imaginary extends NumberStructure<Imaginary> {
 
     private final Number Coefficient;
     private final NumberStructure Exponent;
@@ -86,5 +86,10 @@ public class Imaginary extends NumberStructure {
         int result = Coefficient.hashCode();
         result = 31 * result + Exponent.hashCode();
         return result;
+    }
+
+    @Override
+    public NumberStructure add(Imaginary toAdd) {
+        return null;
     }
 }

@@ -6,7 +6,7 @@ import java.util.HashSet;
  *
  * Created by rgw3d on 11/5/2015.
  */
-public class Variable extends NumberStructure{
+public class Variable extends NumberStructure<Variable>{
 
     private final Number Coefficient;
     private final char Variable;
@@ -103,5 +103,10 @@ public class Variable extends NumberStructure{
         result = 31 * result + (int) Variable;
         result = 31 * result + Exponent.hashCode();
         return result;
+    }
+
+    @Override
+    public NumberStructure add(Variable toAdd) {
+        return null;
     }
 }

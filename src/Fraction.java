@@ -5,7 +5,7 @@ import java.util.HashSet;
  * Simplifier.NumberStructurefier.NumberStructure used to represent rational fractions.
  * Created by rgw3d on 10/9/2014.
  */
-public class Fraction extends NumberStructure {
+public class Fraction extends NumberStructure<Fraction> {
     private final HashSet<NumberStructure> Top;
     private final HashSet<NumberStructure> Bottom;
 
@@ -70,5 +70,10 @@ public class Fraction extends NumberStructure {
         int result = Top.hashCode();
         result = 31 * result + Bottom.hashCode();
         return result;
+    }
+
+    @Override
+    public NumberStructure add(Fraction toAdd) {
+        return null;
     }
 }

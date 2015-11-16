@@ -6,7 +6,7 @@ import java.util.HashSet;
  *
  * Created by rgw3d on 11/6/2015.
  */
-public class Exponent extends NumberStructure {
+public class Exponent extends NumberStructure<Exponent> {
 
     private final NumberStructure Base;
     private final NumberStructure Exponent;
@@ -51,5 +51,10 @@ public class Exponent extends NumberStructure {
         int result = Base.hashCode();
         result = 31 * result + Exponent.hashCode();
         return result;
+    }
+
+    @Override
+    public NumberStructure add(Exponent toAdd) {
+        return null;
     }
 }

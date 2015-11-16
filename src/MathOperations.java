@@ -19,46 +19,59 @@ public class MathOperations {
         // remove the right array.
         // once every element in the left array has been loop through, put all of them into a new ArrayList, along with the
         // any remaining elements in the right array, and then return this arraylist
-        for (int i = 0; i < left.size(); i++) {
-            for (int j = 0; j < right.size(); j++) {
-
+        HashSet<ExpressionNode> result = new HashSet<>();
+        for (ExpressionNode leftNode: left){
+            NumberStructure partialSum = (NumberStructure)leftNode;
+            Iterator<ExpressionNode> rightItr = right.iterator();
+            while (rightItr.hasNext()){
+                NumberStructure rightNode = (NumberStructure)rightItr.next();
+                if(canAdd(partialSum, rightNode)){
+                    rightItr.remove();
+                    partialSum = partialSum.add(rightNode);
+                }
             }
+            right = copyIteratorToHashSet(rightItr);
+            result.add(partialSum);
         }
-        return new HashSet<ExpressionNode>();
+        for (ExpressionNode node : right){
+            result.add(node);
+        }
+
+        return result;
     }
 
-    private static boolean canAdd(ExpressionNode left, ExpressionNode right){
-        if(left instanceof NumberStructure && right instanceof NumberStructure){
-            if(left.getClass().equals(right.getClass())){
-                if(left instanceof Number) {
-                    Number l = (Number) left;
-                    Number r = (Number) right;
-                    return l.getPIExponent() == r.getPIExponent() && l.geteExponent() == r.geteExponent();
-                }
-                if(left instanceof Variable){
-                    Variable l = (Variable) left;
-                    Variable r = (Variable) right;
-                    return l.getVariable() == r.getVariable() && l.getExponent().equals(r.getExponent());
-                }
-                if(left instanceof Imaginary){
-                    Imaginary l = (Imaginary) left;
-                    Imaginary r = (Imaginary) right;
-                    return l.getExponent().equals(r.getExponent());
-                }
-                if(left instanceof Fraction){
-                    Fraction l = (Fraction) left;
-                    Fraction r = (Fraction) right;
-                    return l.getBottom().equals(r.getBottom());
-                }
-                if(left instanceof Term) {
-                    Term l = (Term) left;
-                    Term r = (Term) right;
-                    return l.getVariable().equals(r.getVariable()) && l.getImaginary().equals(r.getImaginary());
-                }
-            }
 
+    private static boolean canAdd(NumberStructure left, NumberStructure right){
+        if(left instanceof Number && right instanceof Number) {
+            Number l = (Number) left;
+            Number r = (Number) right;
+            return l.getPIExponent() == r.getPIExponent() && l.geteExponent() == r.geteExponent();
         }
-
+        if(left instanceof Variable && right instanceof  Variable){
+            Variable l = (Variable) left;
+            Variable r = (Variable) right;
+            return l.getVariable() == r.getVariable() && l.getExponent().equals(r.getExponent());
+        }
+        if(left instanceof Imaginary && right instanceof  Imaginary){
+            Imaginary l = (Imaginary) left;
+            Imaginary r = (Imaginary) right;
+            return l.getExponent().equals(r.getExponent());
+        }
+        if(left instanceof Fraction && right instanceof Fraction){
+            Fraction l = (Fraction) left;
+            Fraction r = (Fraction) right;
+            return l.getBottom().equals(r.getBottom());
+        }
+        if(left instanceof Term && right instanceof Term) {
+            Term l = (Term) left;
+            Term r = (Term) right;
+            return l.getVariable().equals(r.getVariable()) && l.getImaginary().equals(r.getImaginary());
+        }
+        if(left instanceof Exponent && right instanceof Exponent){
+            Exponent l = (Exponent) left;
+            Exponent r = (Exponent) right;
+            return l.getBase().equals(r.getBase());
+        }
         return false;
     }
 
@@ -76,5 +89,13 @@ public class MathOperations {
     public static HashSet<ExpressionNode> power(HashSet<ExpressionNode> left, HashSet<ExpressionNode> right){
 
         return new HashSet<ExpressionNode>();
+    }
+
+
+    public static <T> HashSet<T> copyIteratorToHashSet(Iterator<T> iter) {
+        HashSet<T> copy = new HashSet<T>();
+        while (iter.hasNext())
+            copy.add(iter.next());
+        return copy;
     }
 }

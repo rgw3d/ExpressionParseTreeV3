@@ -7,7 +7,7 @@ import java.util.HashSet;
  * Most basic form of number storage
  * Created by rgw3d on 10/9/2014.
  */
-public class Number extends NumberStructure {
+public class Number extends NumberStructure<Number> {
 
     private final double Coefficient;
     private final double PIExponent;
@@ -147,5 +147,10 @@ public class Number extends NumberStructure {
     @Override
     public HashSet<ExpressionNode> simplify() {
         return new HashSet<ExpressionNode>(Arrays.asList(this));
+    }
+
+    @Override
+    public NumberStructure add(Number toAdd) {
+        return null;
     }
 }

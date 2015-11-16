@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  *
  * Created by rgw3d on 11/5/2015.
  */
-public class Term extends NumberStructure {
+public class Term extends NumberStructure<Term> {
     private final HashSet<NumberStructure> Coefficient;
     private final HashSet<Variable> Variables;
     private final Imaginary Imagine;
@@ -189,5 +189,10 @@ public class Term extends NumberStructure {
         result = 31 * result + Variables.hashCode();
         result = 31 * result + Imagine.hashCode();
         return result;
+    }
+
+    @Override
+    public NumberStructure add(Term toAdd) {
+        return null;
     }
 }
