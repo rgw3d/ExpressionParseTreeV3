@@ -17,7 +17,7 @@ public class ExpressionSanitizer {
         if (input.equalsIgnoreCase(QUIT_KEYWORD))
             throw new InputException(QUIT_KEYWORD);
 
-        isEquation(input);//checks for input errors
+        isValidExpression(input);//checks for input errors
 
         Variables = extractVariables(input);
         ReformattedExpression = reformatInput(input);
@@ -37,13 +37,15 @@ public class ExpressionSanitizer {
      *
      * @param input the string to be tested
      */
-    public void isEquation(String input) throws InputException {
+    public void isValidExpression(String input) throws InputException {
+        /*
         if (!(input.length() >= 3)) { //to short
             throw new InputException(ERROR_PREFIX + "Too Short to be considered an expression");
         }
         if (!(input.contains("+") || input.contains("*") || input.contains("/") || input.contains("^") || input.contains("(") || input.contains("-"))) {
             throw new InputException(ERROR_PREFIX + "Does not contain an operator");
         }
+        */
 
         String endOfEq = input.charAt(input.length() - 1) + "";//ends bad
         if (endOfEq.equals("+") || endOfEq.equals("-") || endOfEq.equals("*") || endOfEq.equals("/")) {

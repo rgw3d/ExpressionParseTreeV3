@@ -12,7 +12,7 @@ public class Imaginary extends NumberStructure {
     private final Number Coefficient;
     private final NumberStructure Exponent;
 
-    public static final Imaginary ZERO = new Imaginary(Number.ONE, Number.ZERO);
+    public static final Imaginary ZERO = new Imaginary(Number.ZERO, Number.ONE);
     public static final Imaginary ONE = new Imaginary(Number.ONE, Number.ONE);
 
     public Imaginary(String input){

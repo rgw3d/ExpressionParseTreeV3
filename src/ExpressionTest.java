@@ -16,7 +16,7 @@ public class ExpressionTest extends TestCase {
     }
 
     public void testExpression1() throws Exception {
-        String[] inputs = {"2pi+3pi", "2e+3pi", "2x+3x", "4x+4y+8z", "4xy+5yx", "5i+3i", "xy-xy"};
+        String[] inputs = {"3i+1","3i-1","i","2pi+3pi", "2e+3pi", "2x+3x", "4x+4y+8z", "4xy+5yx", "5i+3i", "xy-xy"};
 
         for (String x : inputs) {
             Expression expression = new Expression(x);
