@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 /**
@@ -7,7 +8,7 @@ import java.util.HashSet;
  * Most basic form of number storage
  * Created by rgw3d on 10/9/2014.
  */
-public class Number extends NumberStructure<Number> {
+public class Number extends NumberStructure {
 
     private final double Coefficient;
     private final double PIExponent;
@@ -90,7 +91,7 @@ public class Number extends NumberStructure<Number> {
             return new Number(n1.getCoefficient() + n2.getCoefficient(), n1.getPIExponent(), n2.geteExponent());
         }
         else {
-            return new Term(new HashSet<NumberStructure>(Arrays.asList(n1,n2)), null, null);
+            return new Term(new HashSet<NumberStructure>(Arrays.asList(n1,n2)),new HashSet<Variable>() ,Imaginary.ZERO);
         }
     }
 
@@ -145,12 +146,8 @@ public class Number extends NumberStructure<Number> {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public HashSet<ExpressionNode> simplify() {
-        return new HashSet<ExpressionNode>(Arrays.asList(this));
+    public HashSet<NumberStructure> simplify() {
+        return new HashSet<NumberStructure>(Collections.singletonList(this));
     }
 
-    @Override
-    public NumberStructure add(Number toAdd) {
-        return null;
-    }
 }

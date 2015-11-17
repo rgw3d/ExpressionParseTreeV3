@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,7 +9,7 @@ import java.util.regex.Pattern;
  *
  * Created by rgw3d on 11/5/2015.
  */
-public class Term extends NumberStructure<Term> {
+public class Term extends NumberStructure {
     private final HashSet<NumberStructure> Coefficient;
     private final HashSet<Variable> Variables;
     private final Imaginary Imagine;
@@ -106,6 +107,36 @@ public class Term extends NumberStructure<Term> {
         Imagine = img;
     }
 
+    public Term(NumberStructure coef, Variable var, Imaginary img){
+        if(coef == null)
+            Coefficient = new HashSet<NumberStructure>(Collections.singletonList(Number.ONE));
+        else
+            Coefficient = new HashSet<NumberStructure>(Collections.singletonList(coef));
+        if(var == null)
+            Variables = new HashSet<Variable>();
+        else
+            Variables = new HashSet<Variable>(Collections.singletonList(var));
+        if(img == null)
+            Imagine = Imaginary.ZERO;
+        else
+            Imagine = img;
+    }
+
+    public Term(HashSet<NumberStructure> coef, Variable var, Imaginary img){
+        if(coef == null)
+            Coefficient = new HashSet<NumberStructure>(Collections.singletonList(Number.ONE));
+        else
+            Coefficient = coef;
+        if(var == null)
+            Variables = new HashSet<Variable>();
+        else
+            Variables = new HashSet<Variable>(Collections.singletonList(var));
+        if(img == null)
+            Imagine = Imaginary.ZERO;
+        else
+            Imagine = img;
+    }
+
     /**
      *
      * @return double number value
@@ -122,8 +153,20 @@ public class Term extends NumberStructure<Term> {
         return Variables;
     }
 
-    public NumberStructure getImaginary() {
+    public Imaginary getImaginary() {
         return Imagine;
+    }
+
+    /**
+     * Assues that each term can be added together
+     * @param left left term
+     * @param right right term
+     * @return combined term
+     */
+    public static Term add(Term left, Term right){
+        HashSet<NumberStructure> coefficients;
+        coefficients = MathOperations.add(left.getCoefficient(),right.getCoefficient());
+        return new Term(coefficients,left.getVariable(),left.getImaginary());
     }
 
     /**
@@ -132,10 +175,9 @@ public class Term extends NumberStructure<Term> {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public HashSet<ExpressionNode> simplify() {
-        return new HashSet<ExpressionNode>(Arrays.asList(this));
+    public HashSet<NumberStructure> simplify() {
+        return new HashSet<NumberStructure>(Collections.singletonList(this));
     }
-
     @Override
     public String toString() {
         String toReturn = "";
@@ -189,10 +231,5 @@ public class Term extends NumberStructure<Term> {
         result = 31 * result + Variables.hashCode();
         result = 31 * result + Imagine.hashCode();
         return result;
-    }
-
-    @Override
-    public NumberStructure add(Term toAdd) {
-        return null;
     }
 }

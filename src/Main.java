@@ -24,6 +24,7 @@ public class Main {
             input = new Scanner(System.in).nextLine().toLowerCase();
             try {
                 expression = new Expression(input);
+
             } catch (InputException ie) {
                 if (ie.getMessage().equals(ExpressionSanitizer.QUIT_KEYWORD))//error message to stop the loop
                     input = null;

@@ -7,7 +7,7 @@ import java.util.HashSet;
  * Created by rgw3d on 10/9/2014.
  */
 public class Operator implements ExpressionNode {
-    private HashSet<ExpressionNode> Terms = null;
+    private HashSet<NumberStructure> Terms = null;
     private final ExpressionNode Node1;
     private final ExpressionNode Node2;
     private final char Type;
@@ -30,7 +30,7 @@ public class Operator implements ExpressionNode {
     }
 
     @Override
-    public HashSet<ExpressionNode> simplify(){
+    public HashSet<NumberStructure> simplify(){
         if(Terms == null) {
             switch (Type){
                 case '+':

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by rgw3d on 11/5/2015.
  */
 public class Expression implements ExpressionNode{
-    private final HashSet<ExpressionNode> Terms;//used for the final simplification
+    private final HashSet<NumberStructure> Terms;//used for the final simplification
     private final char[] Variables;//
     private final ExpressionNode RootOperator;
     private final String InputExpression;
@@ -42,7 +42,7 @@ public class Expression implements ExpressionNode{
         return ReformattedExpression;
     }
 
-    public HashSet<ExpressionNode> getTerms() {
+    public HashSet<NumberStructure> getTerms() {
         return Terms;
     }
 
@@ -57,14 +57,14 @@ public class Expression implements ExpressionNode{
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public HashSet<ExpressionNode> simplify() {
+    public HashSet<NumberStructure> simplify() {
         return getRootOperator().simplify();
     }
 
-    public static String printSimplifiedExpression(HashSet<ExpressionNode> list){
-        return printSimplifiedExpression(new ArrayList<ExpressionNode>(list));
+    public static String printSimplifiedExpression(HashSet<NumberStructure> list){
+        return printSimplifiedExpression(new ArrayList<NumberStructure>(list));
     }
-    public static String printSimplifiedExpression(List<ExpressionNode> list){
+    public static String printSimplifiedExpression(List<NumberStructure> list){
         if(list.size() == 1)
             return list.get(0).toString();
         return list.get(0).toString() + " + " + printSimplifiedExpression(list.subList(1, list.size() - 1));

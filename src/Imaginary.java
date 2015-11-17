@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 /**
  *
  * Created by rgw3d on 11/6/2015.
  */
-public class Imaginary extends NumberStructure<Imaginary> {
+public class Imaginary extends NumberStructure {
 
     private final Number Coefficient;
     private final NumberStructure Exponent;
@@ -40,6 +41,20 @@ public class Imaginary extends NumberStructure<Imaginary> {
         return new Imaginary(coef, exp);
     }
 
+    /**
+     * This Assumes that conditions have been checked, and that the imaginary numbers can be added together
+     * @param left left Imaginary number
+     * @param right right Imaginary number
+     * @return
+     */
+    public static NumberStructure add(Imaginary left, Imaginary right){
+        NumberStructure coefficient = Number.add(left.getCoefficient(),right.getCoefficient());
+        if(coefficient.equals(Number.ZERO)){
+            return Number.ZERO;
+        }
+        return new Term(coefficient,null,new Imaginary(Number.ONE,left.getExponent()));
+    }
+
     public Number getCoefficient() {
         return Coefficient;
     }
@@ -54,8 +69,8 @@ public class Imaginary extends NumberStructure<Imaginary> {
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
-    public HashSet<ExpressionNode> simplify() {
-        return new HashSet<ExpressionNode>(Arrays.asList(this));
+    public HashSet<NumberStructure> simplify() {
+        return new HashSet<NumberStructure>(Collections.singletonList(this));
     }
 
     @Override
@@ -88,8 +103,4 @@ public class Imaginary extends NumberStructure<Imaginary> {
         return result;
     }
 
-    @Override
-    public NumberStructure add(Imaginary toAdd) {
-        return null;
-    }
 }

@@ -1,11 +1,12 @@
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 /**
  * Simplifier.NumberStructurefier.NumberStructure used to represent rational fractions.
  * Created by rgw3d on 10/9/2014.
  */
-public class Fraction extends NumberStructure<Fraction> {
+public class Fraction extends NumberStructure {
     private final HashSet<NumberStructure> Top;
     private final HashSet<NumberStructure> Bottom;
 
@@ -49,8 +50,8 @@ public class Fraction extends NumberStructure<Fraction> {
      * @return ArrayList of top
      */
     @Override
-    public HashSet<ExpressionNode> simplify() {
-        return new HashSet<ExpressionNode>(Arrays.asList(this));
+    public HashSet<NumberStructure> simplify() {
+        return new HashSet<NumberStructure>(Collections.singletonList(this));
     }
 
     @Override
@@ -72,8 +73,4 @@ public class Fraction extends NumberStructure<Fraction> {
         return result;
     }
 
-    @Override
-    public NumberStructure add(Fraction toAdd) {
-        return null;
-    }
 }
