@@ -10,14 +10,13 @@ import java.util.HashSet;
  */
 public class Number extends NumberStructure {
 
-    private final double Coefficient;
-    private final double PIExponent;
-    private final double eExponent;
-
     public static final Number ZERO = new Number(0);
     public static final Number ONE = new Number(1);
     public static final Number PI = new Number("pi");
     public static final Number e = new Number("e");
+    private final double Coefficient;
+    private final double PIExponent;
+    private final double eExponent;
 
     /**
      * Default constructor.
@@ -44,6 +43,7 @@ public class Number extends NumberStructure {
         PIExponent = pi;
         eExponent = e;
     }
+
 
     /**
      * Should only be used from the Term parser/constructor
@@ -87,7 +87,7 @@ public class Number extends NumberStructure {
     }
 
     public static NumberStructure add(Number n1, Number n2){
-        if(n1.geteExponent() == n2.geteExponent() && n1.geteExponent() == n2.getPIExponent()){
+        if (n1.geteExponent() == n2.geteExponent() && n1.getPIExponent() == n2.getPIExponent()) {
             return new Number(n1.getCoefficient() + n2.getCoefficient(), n1.getPIExponent(), n2.geteExponent());
         }
         else {

@@ -41,7 +41,7 @@ public class ExpressionSanitizer {
         if (!(input.length() >= 3)) { //to short
             throw new InputException(ERROR_PREFIX + "Too Short to be considered an expression");
         }
-        if (!(input.contains("+") || input.contains("*") || input.contains("/") || input.contains("^") || input.contains("("))) {
+        if (!(input.contains("+") || input.contains("*") || input.contains("/") || input.contains("^") || input.contains("(") || input.contains("-"))) {
             throw new InputException(ERROR_PREFIX + "Does not contain an operator");
         }
 

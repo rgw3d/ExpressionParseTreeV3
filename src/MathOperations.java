@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * All the math operations used in each Simplifier.Operator class
@@ -22,17 +23,17 @@ public class MathOperations {
         HashSet<NumberStructure> result = new HashSet<>();
         for (NumberStructure leftNode: left){
             NumberStructure partialSum = leftNode;
-            Iterator<NumberStructure> rightItr = right.iterator();
-            while (rightItr.hasNext()){
-                NumberStructure rightNode = rightItr.next();
-                rightItr.remove();
+            HashSet<NumberStructure> toRemove = new HashSet<>();
+            for (NumberStructure rightNode : right) {
                 NumberStructure tmp = add(partialSum,rightNode);
                 if(tmp != null) {
-                    rightItr.remove();
+                    toRemove.add(rightNode);
                     partialSum = tmp;
                 }
             }
-            right = copyIteratorToHashSet(rightItr);
+            for (NumberStructure x : toRemove) {
+                right.remove(x);
+            }
             result.add(partialSum);
         }
         for (NumberStructure node : right){

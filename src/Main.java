@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -24,7 +23,7 @@ public class Main {
             input = new Scanner(System.in).nextLine().toLowerCase();
             try {
                 expression = new Expression(input);
-
+                System.out.println(expression.getSimplifiedExpression());
             } catch (InputException ie) {
                 if (ie.getMessage().equals(ExpressionSanitizer.QUIT_KEYWORD))//error message to stop the loop
                     input = null;

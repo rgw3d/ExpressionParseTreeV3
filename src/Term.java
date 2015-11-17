@@ -25,6 +25,22 @@ public class Term extends NumberStructure {
             components.add(getNumberStructure(component));
         }
 
+        ArrayList<NumberStructure> updatedComponents = new ArrayList<>();
+        //remove negative variables
+        for (NumberStructure x : components) {
+            if (x instanceof Variable) {
+                Variable var = (Variable) x;
+                if (var.getCoefficient().equals(new Number(-1))) {
+                    updatedComponents.add(new Number(-1));
+                    updatedComponents.add(new Variable(var.getVariable(), var.getExponent()));
+                    continue;
+                }
+            }
+
+            updatedComponents.add(x);
+        }
+        components = updatedComponents;
+
         Number tempCoefficient = Number.ONE;
         HashSet<Variable> tempVariables = new HashSet<Variable>();
         Imaginary tempImagine = Imaginary.ZERO;
@@ -49,57 +65,12 @@ public class Term extends NumberStructure {
 
     }
 
-    private String getComponent(String expression, int index){
-        String component = "";
-        if(expression.charAt(index) == '-') {
-            component += "-";
-            index++;
-        }
-        component+=expression.charAt(index++);
-
-        for (; index < expression.length(); index++) {
-            char charPre = expression.charAt(index-1);
-
-            if(charPre == 'e' || charPre == 'i')//account for e and i
-                break;
-            else if(charPre == 'p'){// account for pi
-                component+='i';
-                break;
-            }
-            char charAt = expression.charAt(index);
-            boolean charPreIsLetter = Character.isLetter(charPre);
-            boolean charAtIsLetter = Character.isLetter(charAt);
-
-            if(charPreIsLetter && !charAtIsLetter) //variable to number
-                break;
-            else if(!charPreIsLetter && charAtIsLetter && charAt != '.') //number to variable
-                break;
-            else if(charPreIsLetter && charAtIsLetter && charPre != charAt) //different variable (different letter)
-                break;
-
-            component += charAt;
-        }
-        return component;
-    }
-
-    private NumberStructure getNumberStructure(String part){
-        Pattern pattern = Pattern.compile("[0-9]");
-        Matcher matcher = pattern.matcher(part);
-        if(part.contains("pi") || part.contains("e") || matcher.find())
-            return new Number(part);
-        else if(part.contains("i"))
-            return new Imaginary(part);
-        else
-            return new Variable(part);
-    }
-
-
-    public Term(HashSet<NumberStructure> coef, HashSet<Variable> var, Imaginary img){
-        if(coef == null)
+    public Term(HashSet<NumberStructure> coef, HashSet<Variable> var, Imaginary img) {
+        if (coef == null)
             coef = new HashSet<NumberStructure>(Arrays.asList(Number.ONE));
-        if(var == null)
+        if (var == null)
             var = new HashSet<Variable>();
-        if(img == null)
+        if (img == null)
             img = Imaginary.ZERO;
 
         Coefficient = coef;
@@ -107,23 +78,24 @@ public class Term extends NumberStructure {
         Imagine = img;
     }
 
-    public Term(NumberStructure coef, Variable var, Imaginary img){
-        if(coef == null)
+    public Term(NumberStructure coef, Variable var, Imaginary img) {
+        if (coef == null)
             Coefficient = new HashSet<NumberStructure>(Collections.singletonList(Number.ONE));
         else
             Coefficient = new HashSet<NumberStructure>(Collections.singletonList(coef));
-        if(var == null)
+        if (var == null)
             Variables = new HashSet<Variable>();
         else
             Variables = new HashSet<Variable>(Collections.singletonList(var));
-        if(img == null)
+        if (img == null)
             Imagine = Imaginary.ZERO;
         else
             Imagine = img;
     }
 
-    public Term(HashSet<NumberStructure> coef, Variable var, Imaginary img){
-        if(coef == null)
+
+    public Term(HashSet<NumberStructure> coef, Variable var, Imaginary img) {
+        if (coef == null)
             Coefficient = new HashSet<NumberStructure>(Collections.singletonList(Number.ONE));
         else
             Coefficient = coef;
@@ -135,6 +107,63 @@ public class Term extends NumberStructure {
             Imagine = Imaginary.ZERO;
         else
             Imagine = img;
+    }
+
+    /**
+     * Assues that each term can be added together
+     *
+     * @param left  left term
+     * @param right right term
+     * @return combined term
+     */
+    public static Term add(Term left, Term right) {
+        HashSet<NumberStructure> coefficients;
+        coefficients = MathOperations.add(left.getCoefficient(), right.getCoefficient());
+        return new Term(coefficients, left.getVariable(), left.getImaginary());
+    }
+
+    private String getComponent(String expression, int index) {
+        String component = "";
+        if (expression.charAt(index) == '-') {
+            component += "-";
+            index++;
+        }
+        component += expression.charAt(index++);
+
+        for (; index < expression.length(); index++) {
+            char charPre = expression.charAt(index - 1);
+
+            if (charPre == 'e' || charPre == 'i')//account for e and i
+                break;
+            else if (charPre == 'p') {// account for pi
+                component += 'i';
+                break;
+            }
+            char charAt = expression.charAt(index);
+            boolean charPreIsLetter = Character.isLetter(charPre);
+            boolean charAtIsLetter = Character.isLetter(charAt);
+
+            if (charPreIsLetter && !charAtIsLetter) //variable to number
+                break;
+            else if (!charPreIsLetter && charAtIsLetter && charAt != '.') //number to variable
+                break;
+            else if (charPreIsLetter && charAtIsLetter && charPre != charAt) //different variable (different letter)
+                break;
+
+            component += charAt;
+        }
+        return component;
+    }
+
+    private NumberStructure getNumberStructure(String part) {
+        Pattern pattern = Pattern.compile("[0-9]");
+        Matcher matcher = pattern.matcher(part);
+        if (part.contains("pi") || part.contains("e") || matcher.find())
+            return new Number(part);
+        else if (part.contains("i"))
+            return new Imaginary(part);
+        else
+            return new Variable(part);
     }
 
     /**
@@ -155,18 +184,6 @@ public class Term extends NumberStructure {
 
     public Imaginary getImaginary() {
         return Imagine;
-    }
-
-    /**
-     * Assues that each term can be added together
-     * @param left left term
-     * @param right right term
-     * @return combined term
-     */
-    public static Term add(Term left, Term right){
-        HashSet<NumberStructure> coefficients;
-        coefficients = MathOperations.add(left.getCoefficient(),right.getCoefficient());
-        return new Term(coefficients,left.getVariable(),left.getImaginary());
     }
 
     /**
