@@ -43,7 +43,7 @@ public class Term extends NumberStructure {
 
         Number tempCoefficient = Number.ONE;
         HashSet<Variable> tempVariables = new HashSet<Variable>();
-        Imaginary tempImagine = Imaginary.ZERO;
+        Imaginary tempImagine = Imaginary.ZERO_EXPONENT;
 
         for(NumberStructure comp : components){
             if(comp instanceof Number){
@@ -71,7 +71,7 @@ public class Term extends NumberStructure {
         if (var == null)
             var = new HashSet<Variable>();
         if (img == null)
-            img = Imaginary.ZERO;
+            img = Imaginary.ZERO_EXPONENT;
 
         Coefficient = coef;
         Variables = var;
@@ -88,7 +88,7 @@ public class Term extends NumberStructure {
         else
             Variables = new HashSet<Variable>(Collections.singletonList(var));
         if (img == null)
-            Imagine = Imaginary.ZERO;
+            Imagine = Imaginary.ZERO_EXPONENT;
         else
             Imagine = img;
     }
@@ -104,7 +104,7 @@ public class Term extends NumberStructure {
         else
             Variables = new HashSet<Variable>(Collections.singletonList(var));
         if(img == null)
-            Imagine = Imaginary.ZERO;
+            Imagine = Imaginary.ZERO_EXPONENT;
         else
             Imagine = img;
     }
@@ -220,7 +220,7 @@ public class Term extends NumberStructure {
             toReturn+=")";
         }
 
-        if(!Imagine.equals(Imaginary.ZERO)){
+        if (!Imagine.equals(Imaginary.ZERO_EXPONENT)) {
             toReturn += "("+Imagine +")";
         }
 

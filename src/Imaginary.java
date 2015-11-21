@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -9,11 +7,11 @@ import java.util.HashSet;
  */
 public class Imaginary extends NumberStructure {
 
-    private final Number Coefficient;
-    private final NumberStructure Exponent;
-
     public static final Imaginary ZERO = new Imaginary(Number.ZERO, Number.ONE);
     public static final Imaginary ONE = new Imaginary(Number.ONE, Number.ONE);
+    public static final Imaginary ZERO_EXPONENT = new Imaginary(Number.ONE, Number.ZERO);
+    private final Number Coefficient;
+    private final NumberStructure Exponent;
 
     public Imaginary(String input){
         if(input.startsWith("-")) {
