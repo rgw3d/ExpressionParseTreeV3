@@ -53,6 +53,9 @@ public class Complex {
         }
         else{
             expression = expression.replace("-","+-");
+            // -a +bi
+            //+-a +b
+            //-a b
             if(expression.startsWith("+"))
                 expression = expression.substring(1);
             int plusSignIndex = expression.indexOf("+");
@@ -75,33 +78,59 @@ public class Complex {
         }
     }
 
+    public static double getImaginary(Complex x) {
+        return x.getImaginary();
+    }
+
+    public static double getReal(Complex x) {
+        return x.getReal();
+    }
+
+    public static Complex add(Complex x, Complex y) {
+        return new Complex(x.getReal() + y.getReal(), x.getImaginary() + y.getImaginary());
+    }
+
+    public static Complex subtract(Complex x, Complex y) {
+        return add(x, new Complex(-y.getReal(), -y.getImaginary()));
+    }
+
+    public static Complex square(Complex x) {
+        return multiply(x, x);
+    }
+
+    public static Complex multiply(Complex x, Complex y) {
+        double realpart = x.getReal() * y.getReal();
+        double imgPart = x.getReal() * y.getImaginary();
+        double imgPart2 = x.getImaginary() * y.getReal();
+        double realPart2 = -1 * x.getImaginary() * y.getImaginary(); //-1 because i *i = -1
+        return new Complex(realPart2 + realpart, imgPart + imgPart2);
+    }
+
+    public static Complex divide(Complex x, double y) {
+        return new Complex(x.getReal() / y, x.getImaginary() / y);
+    }
+
     public Imaginary getImag() {
         return Imag;
     }
 
+    public double getImaginary() {
+        return Imag.getCoefficient().getCoefficient();
+    }
+
     public void setImaginary(double imag) {
-        Imag = new Imaginary(new Number(imag),Number.ONE);
+        Imag = new Imaginary(new Number(imag), Number.ONE);
+    }
+
+    public double getReal() {
+        return Real.getCoefficient();
     }
 
     public void setReal(double real) {
         Real = new Number(real);
     }
 
-    public double getImaginary() {
-        return Imag.getCoefficient().getCoefficient();
-    }
-    public static double getImaginary(Complex x){
-        return x.getImaginary();
-    }
-
-    public double getReal() {
-        return Real.getCoefficient();
-    }
-    public static double getReal(Complex x){
-        return x.getReal();
-    }
-
-    public double getAngle(){
+    public double getAngle() {
         return Math.toDegrees(Math.asin((Math.abs(getImaginary()) / Math.abs(getMagnitude()))));
     }
 
@@ -109,42 +138,25 @@ public class Complex {
         return Math.sqrt(getReal() * getReal() + getImaginary() * getImaginary());
     }
 
-    public void add(Complex x){
+    public void add(Complex x) {
         Imag = new Imaginary(new Number(getImaginary() + x.getImaginary()), Number.ONE);
         Real = new Number(getReal() + x.getReal());
     }
-    public void add(double real){
-        Real = new Number(getReal()+real);
-    }
-    public static Complex add(Complex x, Complex y){
-        return new Complex(x.getReal()+y.getReal(), x.getImaginary()+y.getImaginary());
-    }
-    public static Complex subtract(Complex x, Complex y){
-        return add(x, new Complex(-y.getReal(), -y.getImaginary()));
-    }
-    public String conjugate(){
-        return new Complex(getReal(),-getImaginary()).toString();
-    }
-    public static Complex square(Complex x){
-        return multiply(x,x);
+
+    public void add(double real) {
+        Real = new Number(getReal() + real);
     }
 
-    public static Complex multiply(Complex x, Complex y){
-        double realpart = x.getReal() * y.getReal();
-        double imgPart = x.getReal() * y.getImaginary();
-        double imgPart2 = x.getImaginary() * y.getReal();
-        double realPart2 = -1 * x.getImaginary() * y.getImaginary(); //-1 because i *i = -1
-        return new Complex(realPart2+realpart, imgPart+imgPart2);
+    public String conjugate() {
+        return new Complex(getReal(), -getImaginary()).toString();
     }
+
     public void multiply(Complex x){
         Complex y = multiply(this,x);
         Imag  = new Imaginary(new Number(y.getImaginary()),Number.ONE);
         Real = new Number(y.getReal());
     }
 
-    public static Complex divide(Complex x, double y){
-        return new Complex(x.getReal()/y, x.getImaginary()/y);
-    }
     public void divide(double y){
         Imag = new Imaginary(new Number(getImaginary()/y),Number.ONE);
         Real = new Number(getReal()/y);

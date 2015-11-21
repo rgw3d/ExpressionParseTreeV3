@@ -53,6 +53,22 @@ public class Imaginary extends NumberStructure {
         return new Term(coefficient,null,new Imaginary(Number.ONE,left.getExponent()));
     }
 
+    /**
+     * Add an Imaginary to a Term
+     * Assumes that they can already be added.
+     * This means that the Term has no variables
+     * The Term has an imaginary of of the same exponent
+     *
+     * @param left
+     * @param right
+     * @return
+     */
+    public static NumberStructure add(Imaginary left, Term right) {
+        HashSet<NumberStructure> coef = right.getCoefficient();
+        coef = MathOperations.add(coef, new HashSet<NumberStructure>(Collections.singletonList(left.getCoefficient())));
+        return new Term(coef, right.getVariable(), right.getImaginary());
+    }
+
     public Number getCoefficient() {
         return Coefficient;
     }

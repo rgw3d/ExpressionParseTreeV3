@@ -15,7 +15,7 @@ public class Term extends NumberStructure {
     private final Imaginary Imagine;
 
     public Term(String expression){
-        ArrayList<NumberStructure> components = new ArrayList<NumberStructure>();
+        ArrayList<NumberStructure> components = new ArrayList<>();
 
         //I get a string with no operators, just implied multiplication
         //so, I need to go through the string, and parse negative numbers, numbers, pi, e, and other variables
@@ -42,7 +42,7 @@ public class Term extends NumberStructure {
         components = updatedComponents;
 
         Number tempCoefficient = Number.ONE;
-        HashSet<Variable> tempVariables = new HashSet<Variable>();
+        HashSet<Variable> tempVariables = new HashSet<>();
         Imaginary tempImagine = Imaginary.ZERO_EXPONENT;
 
         for(NumberStructure comp : components){
@@ -69,7 +69,7 @@ public class Term extends NumberStructure {
         if (coef == null)
             coef = new HashSet<NumberStructure>(Arrays.asList(Number.ONE));
         if (var == null)
-            var = new HashSet<Variable>();
+            var = new HashSet<>();
         if (img == null)
             img = Imaginary.ZERO_EXPONENT;
 
@@ -82,11 +82,11 @@ public class Term extends NumberStructure {
         if (coef == null)
             Coefficient = new HashSet<NumberStructure>(Collections.singletonList(Number.ONE));
         else
-            Coefficient = new HashSet<NumberStructure>(Collections.singletonList(coef));
+            Coefficient = new HashSet<>(Collections.singletonList(coef));
         if (var == null)
-            Variables = new HashSet<Variable>();
+            Variables = new HashSet<>();
         else
-            Variables = new HashSet<Variable>(Collections.singletonList(var));
+            Variables = new HashSet<>(Collections.singletonList(var));
         if (img == null)
             Imagine = Imaginary.ZERO_EXPONENT;
         else
@@ -100,9 +100,9 @@ public class Term extends NumberStructure {
         else
             Coefficient = coef;
         if(var == null)
-            Variables = new HashSet<Variable>();
+            Variables = new HashSet<>();
         else
-            Variables = new HashSet<Variable>(Collections.singletonList(var));
+            Variables = new HashSet<>(Collections.singletonList(var));
         if(img == null)
             Imagine = Imaginary.ZERO_EXPONENT;
         else

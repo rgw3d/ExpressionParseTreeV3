@@ -31,7 +31,9 @@ public class ExpressionTest extends TestCase {
     }
 
     public void testSpecificThingSoDebuggingIsEasy() throws Exception {
-
-
+        NumberStructure y = new Term(Number.ONE, null, Imaginary.ZERO_EXPONENT);
+        Term z = new Term(Number.ONE, null, Imaginary.ZERO_EXPONENT);
+        System.out.println("hello?...");
+        System.out.println(y.equals(z));
     }
 }
