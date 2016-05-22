@@ -7,6 +7,8 @@ import java.util.HashSet;
  * Simplifier.Number Simplifier.NumberStructure
  * Most basic form of number storage
  * Created by rgw3d on 10/9/2014.
+ * Number is structured:
+ * Coefficient * pi^(PIExponent) * e^(eExponent)
  */
 public class Number extends NumberStructure {
 

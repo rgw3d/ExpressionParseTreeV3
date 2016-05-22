@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -123,14 +124,30 @@ public class MathOperations {
 
     /**
      * Multiply two sets of NumberStructures together
+     * Strategy: FOIL everything together and add the result to a result set.
+     * return that result set
      *
      * @param left  left Set to multiply
      * @param right right set to multiply
      * @return product of multiplying two number Structures together
      */
     public static HashSet<NumberStructure> multiply(HashSet<NumberStructure> left, HashSet<NumberStructure> right){
+        // multiplication could yield duplicate results... which would not work in a Set
+        HashSet<NumberStructure> result = new HashSet<NumberStructure>();
 
-        return new HashSet<NumberStructure>();
+        for (NumberStructure l : left) {
+            for (NumberStructure r : right) {
+                // multiplication could yield duplicate results... which would not work in a Set
+                NumberStructure product = multiply(l, r);
+                result = add(result, new HashSet<NumberStructure>(Collections.singletonList(product)));
+            }
+        }
+        return result;
+    }
+
+    private static NumberStructure multiply(NumberStructure l, NumberStructure r) {
+        //if (l instanceof Number)
+        return Number.ONE;
     }
 
     public static HashSet<NumberStructure> divide(HashSet<NumberStructure> left, HashSet<NumberStructure> right){

@@ -4,7 +4,7 @@ public class Main {
 
     /**
      * so I want to accept a string
-     * and just send it off to the intermediaary object that will handle pparsing
+     * and just send it off to the intermediary object that will handle parsing
      * and have all of the wrapper methods that will be used to calculate whatever we want
      *
      * @param args

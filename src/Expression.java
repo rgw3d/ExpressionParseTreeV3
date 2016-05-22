@@ -7,44 +7,55 @@ import java.util.List;
  * Created by rgw3d on 11/5/2015.
  */
 public class Expression implements ExpressionNode{
-    private final HashSet<NumberStructure> Terms;//used for the final simplification
-    private final char[] Variables;//
-    private final ExpressionNode RootOperator;
-    private final String InputExpression;
-    private final String ReformattedExpression;
-    private final String SimplifiedExpression;
+    private final HashSet<NumberStructure> Terms;//Hold Simplified Expression
+    private final char[] Variables;//All of the variables in the expression
+    private final ExpressionNode RootOperator;//Root of the Parse Tree
+    private final String InputExpression;//The inputted Expression
+    private final String ReformattedExpression;//The same expression as the input, but reformatted to be more parser friendly
+    private final String SimplifiedExpression;//String version of the Terms variable -- Simplified expression
 
     public Expression(String expression) throws InputException{
         InputExpression = expression;
-        ExpressionSanitizer expressionSanitizer = new ExpressionSanitizer(expression);
-        ReformattedExpression = expressionSanitizer.getReformattedExpression();
-        Variables = expressionSanitizer.getVariables();
+        ExpressionSanitizer expressionSanitizer = new ExpressionSanitizer(expression);//Create ExpressionSanitizer variable
+        ReformattedExpression = expressionSanitizer.getReformattedExpression();//Get Reformatted Expression
+        Variables = expressionSanitizer.getVariables();//Get variables in the Reformatted Expression
 
-        ExpressionParser expressionParser = new ExpressionParser(ReformattedExpression);
-        RootOperator = expressionParser.parseEquation();
-        Terms = removeZeros(simplify());
+        ExpressionParser expressionParser = new ExpressionParser(ReformattedExpression);//Create ExpressionParser Variable
+        RootOperator = expressionParser.parseEquation();//Get Root of the Parse Tree
+        Terms = removeZeros(simplify());//Simplify expression and Remove any extra Zeros that were left behind
 
-        SimplifiedExpression = printSimplifiedExpression(Terms);
+        SimplifiedExpression = printSimplifiedExpression(Terms);//Get string of simplified expression
     }
 
+    /**
+     * Helper function to return the simplified expression from a HashSet containing the simplified terms
+     * Since we cannot immediately iterate though a HashSet, we convert it to an ArrayList and pass it
+     * to the the other printSimplifiedExpression() method
+     *
+     * @param list HashSet containing the simplified terms
+     * @return String containing Simplified Expression
+     */
     public static String printSimplifiedExpression(HashSet<NumberStructure> list) {
-        return printSimplifiedExpression(new ArrayList<NumberStructure>(list));
+        return printSimplifiedExpression(new ArrayList<>(list));
     }
 
+    /**
+     * Return the simplified expression String from an input List
+     * Usually called from the other printSimplifiedExpression(HashSet) method
+     *
+     * @param list List containing all the simplified terms to print
+     * @return String containing Simplified Expression
+     */
     public static String printSimplifiedExpression(List<NumberStructure> list) {
-        if (list.size() < 2)
-            return list.get(0).toString();
-        return list.get(0).toString() + " + " + printSimplifiedExpression(list.subList(1, list.size()));
-    }
-
-    public static String simplify(String toSimplify) {
-        try {
-            Expression expression = new Expression(toSimplify);
-            return expression.getSimplifiedExpression();
-        } catch (InputException e) {
-            System.out.println(e.getMessage());
-            return null;
+        String result = "";
+        for (NumberStructure x : list) {
+            result = result + x.toString() + " + ";
         }
+
+        if (result.length() > 0) {//remove additional "+"
+            result = result.substring(0, result.length() - 3);//TODO: Ensure that this Works
+        }
+        return result;
     }
 
     public static String add(String expression1, String expression2) {
@@ -187,6 +198,12 @@ public class Expression implements ExpressionNode{
         return printSimplifiedExpression(MathOperations.power(expression1.getTerms(), expression2.getTerms()));
     }
 
+    /**
+     * Remove extra Zero terms that may result from simplification
+     * If all the terms are zeros, then the result will contain a zero.
+     * @param simplify HashSet containing all terms to remove zeros
+     * @return HashSet without zero terms (Or one zero if all terms were zeros)
+     */
     private HashSet<NumberStructure> removeZeros(HashSet<NumberStructure> simplify) {
         HashSet<NumberStructure> toRemove = new HashSet<>();
         for (NumberStructure x : simplify) {
@@ -246,12 +263,13 @@ public class Expression implements ExpressionNode{
     }
 
     /**
-     * Get the list of simplified terms,
-     *
+     * Get the list of simplified terms
      * @return simplified list of operation in Nominals and Fractions
      */
     @Override
     public HashSet<NumberStructure> simplify() {
         return getRootOperator().simplify();
     }
+
+
 }
