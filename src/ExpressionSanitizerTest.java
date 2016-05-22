@@ -25,8 +25,8 @@ public class ExpressionSanitizerTest extends TestCase {
     @Test
     public void testReformatInput() throws Exception {
 
-        String[] testInputs = {"pi(5+1)","2  *3(x-1)", "4*5", "5(5(5(5(5(5)5)5)5)5)5", "x(x+1)", "pi(5+x)","1-(x+1)"};
-        String[] outputs = {"pi*(5+1)","2*3*(x+-1)", "4*5", "5*(5*(5*(5*(5*(5)*5)*5)*5)*5)*5", "x*(x+1)","pi*(5+x)","1+-1*(x+1)"};
+        String[] testInputs = {"pi(5+1)", "2  *3(x-1)", "4*5", "5(5(5(5(5(5)5)5)5)5)5", "x(x+1)", "pi(5+x)", "1-(x+1)", "p * w + x"};
+        String[] outputs = {"pi*(5+1)", "2*3*(x+-1)", "4*5", "5*(5*(5*(5*(5*(5)*5)*5)*5)*5)*5", "x*(x+1)", "pi*(5+x)", "1+-1*(x+1)", ""};
 
 
         for (int i = 0; i < testInputs.length; i++) {

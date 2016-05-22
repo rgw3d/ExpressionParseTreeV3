@@ -11,24 +11,24 @@ public class ExpressionSanitizer {
     private final static String ERROR_PREFIX = "Bad Expression. Please Revise\n";
 
     private final String ReformattedExpression;
+    private final String InputExpression;
     private final char[] Variables;
 
+    /**
+     * Constructor. Sanitizes an input expression, pulls Variables out and produces a Reformatted Expression
+     *
+     * @param input String to Sanitize
+     * @throws InputException if there is a problem with the string, an InputException will be thrown
+     */
     public ExpressionSanitizer(String input) throws InputException {
+        InputExpression = input;
         if (input.equalsIgnoreCase(QUIT_KEYWORD))
             throw new InputException(QUIT_KEYWORD);
 
         isValidExpression(input);//checks for input errors
 
-        Variables = extractVariables(input);
-        ReformattedExpression = reformatInput(input);
-    }
-
-    public String getReformattedExpression() {
-        return ReformattedExpression;
-    }
-
-    public char[] getVariables() {
-        return Variables;
+        Variables = extractVariables(input);//pull out all variables
+        ReformattedExpression = reformatInput(input);//Reformat into parser friendly syntax
     }
 
     /**
@@ -38,47 +38,53 @@ public class ExpressionSanitizer {
      * @param input the string to be tested
      */
     public void isValidExpression(String input) throws InputException {
-        /*
-        if (!(input.length() >= 3)) { //to short
-            throw new InputException(ERROR_PREFIX + "Too Short to be considered an expression");
-        }
-        if (!(input.contains("+") || input.contains("*") || input.contains("/") || input.contains("^") || input.contains("(") || input.contains("-"))) {
-            throw new InputException(ERROR_PREFIX + "Does not contain an operator");
-        }
-        */
 
-        String endOfEq = input.charAt(input.length() - 1) + "";//ends bad
+        //Determine if the expression ends with an operation
+        String endOfEq = input.charAt(input.length() - 1) + "";
         if (endOfEq.equals("+") || endOfEq.equals("-") || endOfEq.equals("*") || endOfEq.equals("/")) {
             throw new InputException(ERROR_PREFIX + "Ends with: " + endOfEq);
         }
 
-        String beginOfEq = input.charAt(0) + ""; //starts bad
-        if (beginOfEq.equals("+") || beginOfEq.equals("*") || beginOfEq.equals("/")) {
+        //Determine if the expression starts with an operation
+        String beginOfEq = input.charAt(0) + "";
+        if (beginOfEq.equals("+") || beginOfEq.equals("*") || beginOfEq.equals("/") || beginOfEq.equals("^")) {
             throw new InputException(ERROR_PREFIX + "Starts with " + beginOfEq);
         }
 
+        //Determine if the expression has an "illegal" character
+        //Find all characters that are not: 0-9, a-z, /, -, +, ^, ' '
         Pattern p = Pattern.compile("[^(0-9,a-z*,/,\\-,\\.,+,\\^,\\s)]");
         Matcher m = p.matcher(input);
-        if (m.find()) {//detects illegal character
+        if (m.find()) {
             throw new InputException(ERROR_PREFIX + "Illegal Character: " + m.group());
         }
 
+        //Determine if the expression has repeat operators: 5**6 or 7^^3 or 9//3 are not allowed
         p = Pattern.compile("[\\+,/,\\^,\\*]{2,}");
         m = p.matcher(input);
         if (m.find()) {
             throw new InputException(ERROR_PREFIX + "Two or more of an operator: " + m.group());
         }
 
-        if(input.contains("p") && !input.contains("i")){
-            throw new InputException(ERROR_PREFIX + "\"p\" cannot be used as a variable");
+        //Determine if the expression is using p as a variable. This is not allowed. The expression must contain "pi" if it contains "p"
+        if (input.contains("p")) {
+            if (!input.contains("pi")) {//cannot find pattern "pi"
+                throw new InputException(ERROR_PREFIX + "\"p\" cannot be used as a variable");
+            }
         }
-
 
         parenthesisCheck(input);
 
         //good syntax if no errors are thrown.
     }
 
+    /**
+     * Extract the variables from an expression
+     * This is done by matching all letters, and then removing p and i and e (removing pi and i and e -- non variables)
+     *
+     * @param input Input Expression
+     * @return char[] containing all variables in this expression
+     */
     public char[] extractVariables(String input){
         Pattern p = Pattern.compile("[a-z]*");
         Matcher m = p.matcher(input);
@@ -109,7 +115,7 @@ public class ExpressionSanitizer {
         if (!(openCount == closedCount)) {
             throw new InputException(ERROR_PREFIX + "Uneven amount of parenthesis\n" +
                     "\tOpen: " + openCount + "\n" +
-                    "\tClosded: " + closedCount);
+                    "\tClosed: " + closedCount);
         }
 
     }
@@ -146,28 +152,50 @@ public class ExpressionSanitizer {
         return input;
     }
 
+    /**
+     * Infer parenthesis multiplication, allowing for easier to parse syntax
+     * For situations like this: 3(x+1) or (x^2-1)33 or pi(x-2) or e(2+1) or y(x+z)
+     *
+     * Strategy: Create a pattern containing all numbers, p, i, e, and all variables
+     *          Create a variable result
+     *          Loop though all but the last character of input
+     *              Concat the current character to result
+     *              if the current character is contained in the pattern and the next character is '(' OR:
+     *                  the current character is ')' and the next character is contained in the pattern
+     *              then concat "*" to result
+     *          Add the last character of the input string to result
+     *          return result
+     *
+     * @param input String input containing expression to infer multiplication on
+     * @return String containing inferred parenthesis multiplication
+     */
     public String inferParenthesisMultiplication(String input) {
         String result = "";
-        String pattern = "[0-9pie";
-        for(char c: getVariables()){
-            pattern+=c;
-        }
-        pattern+="]";
+        String pattern = "0123456789pie";
+        pattern += String.valueOf(getVariables());
 
-
-        //for(char c: getVariables()){
-
-        //}
-        Pattern p = Pattern.compile(pattern);
         for (int i = 0; i + 1 < input.length(); i++) {
             result += input.charAt(i);
-            if ((p.matcher(input.charAt(i) + "").find() && input.charAt(i + 1) == '(') ||
-                    (input.charAt(i) == ')' && p.matcher(input.charAt(i + 1) + "").find())) {
+            if (((pattern.contains(input.charAt(i) + "") && input.charAt(i + 1) == '(')) ||
+                    (input.charAt(i) == ')' && pattern.contains(input.charAt(i + 1) + ""))) {
                 result += "*";
             }
         }
-        result += input.charAt(input.length() - 1);
+        result += input.charAt(input.length() - 1);//add last character of input string
 
         return result;
     }
+
+    public String getReformattedExpression() {
+        return ReformattedExpression;
+    }
+
+    public char[] getVariables() {
+        return Variables;
+    }
+
+    public String getInputExpression() {
+        return InputExpression;
+    }
+
 }
